@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SCP · Лист персонажа (Research team)</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* === ОБЩИЕ СТИЛИ С МАКСИМАЛЬНЫМ КОНТРАСТОМ === */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      font-family: 'Segoe UI', 'Arial', sans-serif;
+    }
+
+    body {
+      background: #020405;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    /* основной контейнер */
+    .scp-sheet {
+      max-width: 1050px;
+      width: 100%;
+      background: #1a1e22;
+      border: 3px solid #5a7a8c;
+      box-shadow: 0 0 0 3px #0a0e11, 0 12px 28px black;
+      padding: 20px 25px 25px;
+      border-radius: 8px;
+      transition: background 0.2s, border-color 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* темы */
+    .scp-sheet[data-role="class-d"] {
+      background: #2c2420;
+      border-color: #d48a4e;
+    }
+    .scp-sheet[data-role="researcher"] {
+      background: #e8edf2;
+      border-color: #1e3a4d;
+    }
+    .scp-sheet[data-role="guard"] {
+      background: #0f1922;
+      border-color: #3a8bb9;
+    }
+    .scp-sheet[data-role="taskforce"] {
+      background: #1a0e0e;
+      border-color: #c44a3a;
+    }
+    
+    /* SCP-Объект */
+    .scp-sheet[data-role="scp"] {
+      background: #0a0303;
+      border: 4px solid #8b1a1a;
+      box-shadow: 0 0 0 4px #2c0404, 0 12px 28px black, inset 0 0 40px rgba(120, 0, 0, 0.4);
+      background-image: 
+        radial-gradient(circle at 20% 30%, rgba(70, 0, 0, 0.3) 0%, transparent 30%),
+        radial-gradient(circle at 80% 70%, rgba(90, 0, 0, 0.4) 0%, transparent 40%),
+        radial-gradient(circle at 40% 80%, rgba(50, 0, 0, 0.5) 0%, transparent 35%),
+        linear-gradient(145deg, #1a0202 0%, #0f0101 100%);
+    }
+
+    /* шапка */
+    .header-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 4px solid #7a9aaf;
+      padding-bottom: 10px;
+      margin-bottom: 22px;
+      flex-wrap: wrap;
+    }
+    .scp-sheet[data-role] .header-banner {
+      border-bottom-color: currentColor;
+    }
+    .scp-sheet[data-role="scp"] .header-banner {
+      border-bottom-color: #a03333;
+    }
+    .header-left {
+      font-size: 3rem;
+      font-weight: 900;
+      letter-spacing: 6px;
+      color: #ffffff;
+      text-shadow: 4px 4px 0 #0f1a22;
+      line-height: 1;
+    }
+    .scp-sheet[data-role="researcher"] .header-left {
+      color: #0a1a24;
+      text-shadow: 2px 2px 0 #a0b8ca;
+    }
+    .scp-sheet[data-role="scp"] .header-left {
+      color: #ffe0e0;
+      text-shadow: 3px 3px 0 #4a0000;
+    }
+    .header-center {
+      font-family: 'Courier New', monospace;
+      font-weight: 800;
+      font-size: 1.8rem;
+      color: #ffffff;
+      text-transform: uppercase;
+      background: #1e2c38;
+      padding: 6px 22px;
+      border-radius: 40px;
+      border: 2px solid #8aaec2;
+      letter-spacing: 3px;
+    }
+    .scp-sheet[data-role="researcher"] .header-center {
+      background: #b0c4d4;
+      color: #020d14;
+      border-color: #0a1f2c;
+    }
+    .scp-sheet[data-role="scp"] .header-center {
+      background: #2c0a0a;
+      color: #ffc0c0;
+      border-color: #b14545;
+    }
+
+    /* кнопки сохранения/загрузки */
+    .save-load-bar {
+      display: flex;
+      gap: 12px;
+    }
+    .save-load-btn {
+      background: #1e2c38;
+      border: 2px solid #6b95af;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 30px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: 0.15s;
+    }
+    .save-load-btn:hover {
+      background: #2a404f;
+      border-color: #a0c0d8;
+    }
+    .scp-sheet[data-role="researcher"] .save-load-btn {
+      background: #b0c4d4;
+      color: #020d14;
+      border-color: #0a1f2c;
+    }
+    .scp-sheet[data-role="scp"] .save-load-btn {
+      background: #2c0a0a;
+      border-color: #b14545;
+      color: #ffc0c0;
+    }
+
+    /* табы */
+    .tabs-nav {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 18px;
+      border-bottom: 3px solid #4a6375;
+      padding-bottom: 3px;
+    }
+    .tab-btn {
+      background: #1b262e;
+      color: #ffffff;
+      border: 2px solid #5f7f94;
+      border-bottom: none;
+      padding: 12px 22px;
+      font-weight: bold;
+      font-size: 1.2rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      cursor: pointer;
+      border-radius: 8px 8px 0 0;
+      box-shadow: inset 0 -4px 0 #16222b;
+      transition: 0.15s;
+    }
+    .tab-btn i {
+      margin-right: 8px;
+      color: #b0d0e8;
+    }
+    .tab-btn.active {
+      background: #2a404f;
+      color: #ffffff;
+      border-color: #a0c0d8 #a0c0d8 #2a404f;
+      box-shadow: inset 0 -4px 0 #c75a3a, 0 3px 8px black;
+    }
+    .scp-sheet[data-role="researcher"] .tab-btn {
+      background: #cfdce6;
+      color: #000000;
+      border-color: #2b4d63;
+    }
+    .scp-sheet[data-role="researcher"] .tab-btn.active {
+      background: #eaf0f7;
+      color: #000000;
+      border-color: #1a3e57 #1a3e57 #eaf0f7;
+      box-shadow: inset 0 -4px 0 #1a4a66;
+    }
+    .scp-sheet[data-role="scp"] .tab-btn {
+      background: #2b1515;
+      color: #ffd0d0;
+      border-color: #9e4a4a;
+    }
+    .scp-sheet[data-role="scp"] .tab-btn.active {
+      background: #4e2020;
+      border-color: #c44a4a #c44a4a #4e2020;
+      box-shadow: inset 0 -4px 0 #b31b1b;
+    }
+
+    /* панели */
+    .tab-panel {
+      display: none;
+      background: #15222b;
+      padding: 24px 22px;
+      border: 2px solid #56758a;
+      border-radius: 0 12px 12px 12px;
+      box-shadow: inset 0 0 12px #050a0e, 0 6px 12px black;
+    }
+    .scp-sheet[data-role="researcher"] .tab-panel {
+      background: #f5faff;
+      border-color: #6d8da3;
+      color: #031017;
+    }
+    .scp-sheet[data-role="scp"] .tab-panel {
+      background: #1c0808;
+      border-color: #b14545;
+      box-shadow: inset 0 0 25px #2c0404;
+    }
+    .tab-panel.active {
+      display: block;
+    }
+
+    /* карточки */
+    .info-card {
+      background: #0e1922;
+      border-left: 8px solid #c75a3a;
+      padding: 18px 20px;
+      box-shadow: inset 0 0 0 1px #2d5068;
+    }
+    .scp-sheet[data-role="researcher"] .info-card {
+      background: #ffffff;
+      border-left-color: #134257;
+      border: 2px solid #7d9bb0;
+    }
+    .scp-sheet[data-role="scp"] .info-card {
+      background: #1f0a0a;
+      border-left-color: #b33b3b;
+      border: 2px solid #8f3838;
+    }
+    .info-card h3 {
+      color: #ffffff;
+      font-size: 1.6rem;
+      border-bottom: 3px dashed #6b95af;
+      padding-bottom: 8px;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .scp-sheet[data-role="researcher"] .info-card h3 {
+      color: #02121e;
+      border-bottom-color: #1a4a66;
+    }
+    .scp-sheet[data-role="scp"] .info-card h3 {
+      color: #ffdbdb;
+      border-bottom-color: #a04545;
+    }
+
+    /* строки */
+    .stat-label {
+      width: 130px;
+      font-weight: 800;
+      color: #c7dfee;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .scp-sheet[data-role="researcher"] .stat-label {
+      color: #052433;
+    }
+    .scp-sheet[data-role="scp"] .stat-label {
+      color: #f0c0c0;
+    }
+    .stat-value {
+      color: #ffffff;
+      font-weight: 600;
+      background: #142f40;
+      padding: 7px 16px;
+      border-radius: 30px;
+      border: 2px solid #5b8ba7;
+    }
+    .scp-sheet[data-role="researcher"] .stat-value {
+      background: #d1e1ec;
+      color: #000000;
+      border-color: #1f5775;
+    }
+    .scp-sheet[data-role="scp"] .stat-value {
+      background: #381818;
+      color: #ffd0d0;
+      border-color: #b55a5a;
+    }
+
+    /* конечности */
+    .limb-name {
+      width: 95px;
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 1.05rem;
+      text-shadow: 1px 1px 0 #0a141c;
+    }
+    .scp-sheet[data-role="researcher"] .limb-name {
+      color: #031a28;
+      text-shadow: none;
+      font-weight: 800;
+    }
+    .scp-sheet[data-role="scp"] .limb-name {
+      color: #ffcaca;
+      text-shadow: 1px 1px 0 #3c0000;
+    }
+    .limb-value {
+      width: 45px;
+      text-align: center;
+      font-weight: 800;
+      color: #ffffff;
+      font-size: 1.4rem;
+    }
+    .scp-sheet[data-role="researcher"] .limb-value {
+      color: #000;
+    }
+    .limb-btn {
+      background: #1f445c;
+      border: 2px solid #8bb4cf;
+      color: white;
+      width: 34px;
+      height: 34px;
+      border-radius: 30px;
+      font-weight: 900;
+      font-size: 1.3rem;
+      cursor: pointer;
+    }
+
+    /* текстовые поля */
+    textarea, input[type="text"], select {
+      background: #0a1924;
+      border: 2px solid #5e8aa3;
+      color: #ffffff;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 500;
+    }
+    .scp-sheet[data-role="researcher"] textarea,
+    .scp-sheet[data-role="researcher"] input,
+    .scp-sheet[data-role="researcher"] select {
+      background: #ffffff;
+      color: #000000;
+      border: 2px solid #1e4f6b;
+    }
+    .scp-sheet[data-role="scp"] textarea,
+    .scp-sheet[data-role="scp"] input {
+      background: #2b0f0f;
+      border-color: #a14545;
+      color: #ffdada;
+    }
+    textarea:focus, input:focus {
+      border-color: #e0844b;
+      outline: none;
+    }
+
+    /* инвентарь */
+    .inv-box {
+      background: #0e1b26;
+      border: 2px solid #5a839c;
+      padding: 16px;
+      border-radius: 12px;
+    }
+    .scp-sheet[data-role="researcher"] .inv-box {
+      background: #eef3f8;
+      border-color: #25536b;
+    }
+    .scp-sheet[data-role="scp"] .inv-box {
+      background: #1f0d0d;
+      border-color: #a14545;
+    }
+    .inv-box h4 {
+      color: #ffffff;
+      font-size: 1.5rem;
+      border-left: 6px solid #c75a3a;
+      padding-left: 14px;
+      margin-bottom: 14px;
+    }
+    .scp-sheet[data-role="researcher"] .inv-box h4 {
+      color: #031a26;
+    }
+    .scp-sheet[data-role="scp"] .inv-box h4 {
+      color: #ffcdcd;
+      border-left-color: #b33b3b;
+    }
+
+    /* ЯРКИЕ НАДПИСИ В ИНВЕНТАРЕ */
+    .counter-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #0e212f;
+      padding: 8px 14px;
+      border-radius: 30px;
+      margin-bottom: 10px;
+    }
+    .counter-item label {
+      color: #ffffff !important;
+      font-weight: 700;
+      font-size: 1.1rem;
+      text-shadow: 1px 1px 0 #0a141c;
+    }
+    .scp-sheet[data-role="researcher"] .counter-item {
+      background: #d2e2ed;
+    }
+    .scp-sheet[data-role="researcher"] .counter-item label {
+      color: #000000 !important;
+      text-shadow: none;
+      font-weight: 800;
+    }
+    .scp-sheet[data-role="scp"] .counter-item {
+      background: #2e1212;
+    }
+    .scp-sheet[data-role="scp"] .counter-item label {
+      color: #ffd0d0 !important;
+    }
+
+    /* База фонда */
+    .scp-entry {
+      background: #13222e;
+      border-left: 8px solid #c75a3a;
+      padding: 12px 20px;
+      color: white;
+    }
+    .delete-btn {
+      background: #382b2b;
+      border: 2px solid #b17e7e;
+      color: #ffd9d9;
+      padding: 6px 16px;
+      border-radius: 30px;
+      font-weight: bold;
+    }
+
+    /* ХП и КД - ВЕРТИКАЛЬНОЕ РАСПОЛОЖЕНИЕ */
+    .characteristics-block {
+      margin-bottom: 14px;
+    }
+    .characteristics-title {
+      font-weight: 800;
+      color: #c7dfee;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+      font-size: 1rem;
+    }
+    .scp-sheet[data-role="researcher"] .characteristics-title {
+      color: #052433;
+    }
+    .scp-sheet[data-role="scp"] .characteristics-title {
+      color: #f0c0c0;
+    }
+    .hp-kd-row {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+    .hp-kd-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .hp-kd-item label {
+      font-weight: 800;
+      color: #c7dfee;
+      min-width: 35px;
+    }
+    .scp-sheet[data-role="researcher"] .hp-kd-item label {
+      color: #052433;
+    }
+    .scp-sheet[data-role="scp"] .hp-kd-item label {
+      color: #f0c0c0;
+    }
+    .health-icon {
+      font-size: 2.2rem;
+      margin-right: 4px;
+      color: #ff5e5e;
+    }
+    .shield-icon {
+      font-size: 2rem;
+      color: #6ba5d1;
+      margin-right: 4px;
+    }
+    .scp-sheet[data-role="researcher"] .shield-icon {
+      color: #1e4f6b;
+    }
+    .scp-sheet[data-role="scp"] .shield-icon {
+      color: #b55a5a;
+    }
+
+    /* кастом для SCP темы */
+    .scp-sheet[data-role="scp"] .note {
+      color: #e0b0b0;
+    }
+
+    /* дополнительные контрасты */
+    .scp-sheet[data-role="researcher"] .disease-box textarea {
+      background: #ffffff;
+      color: #000;
+    }
+
+    /* отступы для блоков */
+    .stat-line {
+      display: flex;
+      margin-bottom: 14px;
+      align-items: center;
+    }
+  </style>
+</head>
+<body>
+<div class="scp-sheet" id="mainSheet" data-role="class-d">
+  <!-- Шапка с кнопками сохранения/загрузки -->
+  <div class="header-banner">
+    <div class="header-left">SCP //</div>
+    <div class="header-center">- Research team</div>
+    <div class="save-load-bar">
+      <button class="save-load-btn" id="saveProfileBtn"><i class="fas fa-save"></i> Сохранить</button>
+      <button class="save-load-btn" id="loadProfileBtn"><i class="fas fa-upload"></i> Загрузить</button>
+    </div>
+  </div>
+
+  <!-- Табы -->
+  <div class="tabs-nav">
+    <button class="tab-btn active" data-tab="tab1"><i class="fas fa-id-card"></i> Оглавление</button>
+    <button class="tab-btn" data-tab="tab2"><i class="fas fa-suitcase"></i> Инвентарь</button>
+    <button class="tab-btn" data-tab="tab3"><i class="fas fa-book-open"></i> Биография</button>
+    <button class="tab-btn" data-tab="tab4"><i class="fas fa-database"></i> База Фонда</button>
+  </div>
+
+  <!-- ВКЛАДКА 1: ОГЛАВЛЕНИЕ -->
+  <div id="tab1" class="tab-panel active">
+    <div class="char-stats" style="display:grid; grid-template-columns:1.2fr 1.5fr; gap:25px;">
+      <div class="info-card">
+        <h3><i class="fas fa-user-secret"></i> Досье</h3>
+        <!-- Имя -->
+        <div class="stat-line">
+          <span class="stat-label">Имя</span>
+          <span class="stat-value" id="charName" contenteditable="true"></span>
+        </div>
+        <!-- Роль -->
+        <div class="stat-line">
+          <span class="stat-label">Роль</span>
+          <div class="role-selector" style="display:flex; gap:10px;">
+            <select id="roleSelect" style="padding:8px 16px; font-weight:bold;">
+              <option value="class-d" selected>Класс-D</option>
+              <option value="researcher">Исследователь</option>
+              <option value="guard">Охрана</option>
+              <option value="taskforce">Группа Захвата</option>
+              <option value="scp">SCP-Объект</option>
+            </select>
+            <span id="roleExtraUi" style="margin-left:5px;"></span>
+          </div>
+        </div>
+        <!-- Характеристики -->
+        <div class="characteristics-block">
+          <div class="characteristics-title">Характеристики</div>
+          <div class="hp-kd-row">
+            <div class="hp-kd-item">
+              <span class="health-icon">❤️</span>
+              <label>ХП</label>
+              <input type="text" id="hpInput" value="12 / 12" style="width:90px; background:#142f40; color:white; border:2px solid #5b8ba7; padding:8px; border-radius:30px;">
+            </div>
+            <div class="hp-kd-item">
+              <span class="shield-icon"><i class="fas fa-shield-alt"></i></span>
+              <label>КД</label>
+              <input type="text" id="kdInput" value="10" style="width:70px; background:#142f40; color:white; border:2px solid #5b8ba7; padding:8px; border-radius:30px;">
+            </div>
+          </div>
+        </div>
+        <!-- Конечности -->
+        <div style="margin-top:20px;">
+          <div style="color:#e0eef9; font-weight:bold; margin-bottom:12px;">Состояние конечностей (4-здорова, 0-отсутствует)</div>
+          <div class="limb-grid" id="limbContainer" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;"></div>
+        </div>
+        <!-- Заболевания -->
+        <div style="margin-top:22px;" class="disease-box">
+          <div style="color:#e0eef9; font-weight:bold; margin-bottom:6px;"><i class="fas fa-biohazard"></i> Заболевания</div>
+          <textarea id="diseaseText" placeholder="Опишите заразу, хронические болезни..." style="width:100%; min-height:85px;"></textarea>
+        </div>
+      </div>
+      <div class="info-card">
+        <h3><i class="fas fa-brain"></i> Умения и особенности</h3>
+        <textarea id="traitsText" placeholder="Особенности, навыки..." style="width:100%; min-height:200px;"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- ВКЛАДКА 2: ИНВЕНТАРЬ -->
+  <div id="tab2" class="tab-panel">
+    <div style="display:flex; gap:25px; flex-wrap:wrap;">
+      <div style="flex:2;">
+        <div class="inv-box">
+          <h4><i class="fas fa-box"></i> Вещи и заметки</h4>
+          <textarea id="itemsText" style="width:100%; min-height:130px;"></textarea>
+        </div>
+        <div class="inv-box" style="margin-top:18px;">
+          <h4><i class="fas fa-crosshairs"></i> Оружие</h4>
+          <textarea id="weaponsText" style="width:100%; min-height:90px;"></textarea>
+        </div>
+      </div>
+      <div style="flex:1.5;">
+        <div class="inv-box">
+          <h4><i class="fas fa-syringe"></i> Медикаменты</h4>
+          <div class="counter-item"><label>Аптечки</label><input type="text" id="medkitCount" value="0" style="width:80px;"></div>
+          <div class="counter-item"><label>Стимуляторы</label><input type="text" id="stimCount" value="0" style="width:80px;"></div>
+        </div>
+        <div class="inv-box">
+          <h4><i class="fas fa-bolt"></i> Боеприпасы</h4>
+          <div class="counter-item"><label>Мелкие</label><input type="text" id="ammoSmall" value="0"></div>
+          <div class="counter-item"><label>Дробь</label><input type="text" id="ammoShotgun" value="0"></div>
+          <div class="counter-item"><label>Штурмовые</label><input type="text" id="ammoRifle" value="0"></div>
+          <div class="counter-item"><label>Тяжёлые</label><input type="text" id="ammoHeavy" value="0"></div>
+          <input type="text" id="customAmmo1" placeholder="Доп. боеприпас 1" style="width:100%; margin-top:8px;">
+          <input type="text" id="customAmmo2" placeholder="Доп. боеприпас 2" style="width:100%; margin-top:8px;">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ВКЛАДКА 3: БИОГРАФИЯ -->
+  <div id="tab3" class="tab-panel">
+    <div style="margin-bottom:20px;"><label style="font-weight:bold;">Имя / Позывной</label><input type="text" id="bioName" style="width:100%;"></div>
+    <div style="margin-bottom:20px;"><label style="font-weight:bold;">Внешность</label><textarea id="bioAppearance" rows="3" style="width:100%;"></textarea></div>
+    <div style="margin-bottom:20px;"><label style="font-weight:bold;">История</label><textarea id="bioHistory" rows="5" style="width:100%;"></textarea></div>
+  </div>
+
+  <!-- ВКЛАДКА 4: БАЗА ФОНДА -->
+  <div id="tab4" class="tab-panel">
+    <div style="display:flex; gap:15px; margin-bottom:22px;">
+      <input type="text" id="scpNumberInput" placeholder="Введите номер SCP (например 002)" style="flex:1;">
+      <button id="addScpBtn" style="background:#2b556e; border:2px solid #9fc3db; color:white; padding:12px 24px; border-radius:40px;"><i class="fas fa-plus-circle"></i> Добавить</button>
+    </div>
+    <div style="background:#0f1e2a; border:2px solid #3f718b; padding:18px; border-radius:14px;">
+      <div style="color:white; font-size:1.5rem; margin-bottom:14px;"><i class="fas fa-archive"></i> Изученные объекты</div>
+      <div id="scpList"></div>
+      <div class="note" style="color:#b0d0e8; margin-top:14px;"><i class="fas fa-info-circle"></i> Клик по объекту — страница SCP Foundation.</div>
+    </div>
+  </div>
+</div>
+
+<!-- Скрытое поле для загрузки файла -->
+<input type="file" id="loadFileInput" accept=".json" style="display:none;">
+
+<script>
+  (function(){
+    "use strict";
+
+    // ========== ТАБЫ ==========
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(btn.dataset.tab).classList.add('active');
+      });
+    });
+
+    // ========== КОНЕЧНОСТИ ==========
+    const limbs = [
+      { name: 'Голова', value: 4 },{ name: 'Торс', value: 4 },{ name: 'Левая рука', value: 4 },
+      { name: 'Правая рука', value: 4 },{ name: 'Левая нога', value: 4 },{ name: 'Правая нога', value: 4 }
+    ];
+    const limbContainer = document.getElementById('limbContainer');
+    function renderLimbs() {
+      let html = '';
+      limbs.forEach((limb, idx) => {
+        html += `<div style="display:flex; align-items:center; gap:8px;">
+          <span class="limb-name">${limb.name}</span>
+          <button class="limb-btn" data-idx="${idx}" data-delta="-1">−</button>
+          <span class="limb-value" id="limbVal${idx}">${limb.value}</span>
+          <button class="limb-btn" data-idx="${idx}" data-delta="1">+</button>
+        </div>`;
+      });
+      limbContainer.innerHTML = html;
+      document.querySelectorAll('.limb-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const idx = btn.dataset.idx;
+          const delta = parseInt(btn.dataset.delta);
+          let newVal = limbs[idx].value + delta;
+          if (newVal < 0) newVal = 0;
+          if (newVal > 4) newVal = 4;
+          limbs[idx].value = newVal;
+          document.getElementById(`limbVal${idx}`).textContent = newVal;
+        });
+      });
+    }
+    renderLimbs();
+
+    // ========== РОЛЬ И ТЕМЫ ==========
+    const sheet = document.getElementById('mainSheet');
+    const roleSelect = document.getElementById('roleSelect');
+    const roleExtra = document.getElementById('roleExtraUi');
+    function updateRole() {
+      const role = roleSelect.value;
+      sheet.setAttribute('data-role', role);
+      let extra = '';
+      if (role === 'researcher') extra = `<select id="clearanceLevel" style="margin-left:8px; padding:6px;"><option>Уровень 1</option><option>Уровень 2</option><option selected>Уровень 3</option><option>Уровень 4</option><option>Уровень 5</option></select>`;
+      else if (role === 'guard') extra = `<select id="guardCardSelect" style="margin-left:8px;"><option>Карта 1</option><option>Карта 2</option><option selected>Карта 3</option></select> <span style="margin-left:12px; background:#15445e; padding:6px 14px; border-radius:30px;">🔒 Комната снабжения</span>`;
+      else if (role === 'taskforce') extra = `<span style="margin-left:8px; background:#782a2a; padding:6px 18px; border-radius:30px; border:2px solid #c44;">🎫 Мастер-карта</span>`;
+      else if (role === 'scp') extra = `<span style="margin-left:8px; background:#4a1515; padding:6px 18px; border-radius:30px; border:2px solid #a11;">⚠️ Класс: Кетер</span>`;
+      else extra = `<span style="margin-left:8px; color:#e0b087;">[ограничен]</span>`;
+      roleExtra.innerHTML = extra;
+    }
+    roleSelect.addEventListener('change', updateRole);
+    updateRole();
+
+    // ========== БАЗА ФОНДА ==========
+    const STORAGE_KEY = 'scp_database_entries';
+    const scpListEl = document.getElementById('scpList');
+    const scpInput = document.getElementById('scpNumberInput');
+    const addBtn = document.getElementById('addScpBtn');
+    let scpEntries = [];
+
+    function loadScpFromStorage() {
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || ['002','173','049']; } 
+      catch(e) { return ['002','173','049']; }
+    }
+    function saveScpToStorage(entries) { 
+      scpEntries = entries.slice();
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(entries)); 
+    }
+    function renderScp() {
+      const entries = scpEntries;
+      if (!entries.length) { scpListEl.innerHTML = '<div style="color:#ccc;">Нет объектов</div>'; return; }
+      let html = '';
+      entries.forEach(num => {
+        html += `<div class="scp-entry" data-url="https://scpfoundation.net/scp-${num.toLowerCase()}" style="display:flex; justify-content:space-between; margin-bottom:8px; padding:10px 16px; border-radius:8px;">
+          <span><i class="fas fa-flask"></i> SCP-${num}</span>
+          <div><span style="margin-right:15px; color:#b0d8ff;"><i class="fas fa-external-link-alt"></i> открыть</span>
+          <button class="delete-btn" data-scp="${num}"><i class="fas fa-trash-alt"></i> Удалить</button></div>
+        </div>`;
+      });
+      scpListEl.innerHTML = html;
+      document.querySelectorAll('.scp-entry').forEach(el => {
+        el.addEventListener('click', (e) => { if (!e.target.closest('.delete-btn')) window.open(el.dataset.url, '_blank'); });
+      });
+      document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const scp = btn.dataset.scp;
+          saveScpToStorage(scpEntries.filter(n => n !== scp));
+          renderScp();
+        });
+      });
+    }
+
+    addBtn.addEventListener('click', () => {
+      let val = scpInput.value.trim().replace(/^scp[-_\s]*/i, '');
+      if (!val) return;
+      if (!scpEntries.includes(val)) { 
+        scpEntries.push(val); 
+        saveScpToStorage(scpEntries); 
+        renderScp(); 
+        scpInput.value = ''; 
+      } else alert('Уже в базе');
+    });
+
+    // Инициализация SCP
+    if (!localStorage.getItem(STORAGE_KEY)) saveScpToStorage(['002','173','049']);
+    else scpEntries = loadScpFromStorage();
+    renderScp();
+
+    // ========== СБОР ДАННЫХ ПРОФИЛЯ ==========
+    function collectProfileData() {
+      // роль и доп элементы
+      let clearance = null, guardCard = null;
+      if (roleSelect.value === 'researcher') {
+        const sel = document.getElementById('clearanceLevel');
+        if (sel) clearance = sel.value;
+      } else if (roleSelect.value === 'guard') {
+        const sel = document.getElementById('guardCardSelect');
+        if (sel) guardCard = sel.value;
+      }
+
+      return {
+        version: "1.0",
+        role: roleSelect.value,
+        roleExtra: {
+          clearance: clearance,
+          guardCard: guardCard
+        },
+        name: document.getElementById('charName').innerText,
+        hp: document.getElementById('hpInput').value,
+        kd: document.getElementById('kdInput').value,
+        limbs: limbs.map(l => ({ name: l.name, value: l.value })),
+        diseases: document.getElementById('diseaseText').value,
+        traits: document.getElementById('traitsText').value,
+        inventory: {
+          items: document.getElementById('itemsText').value,
+          weapons: document.getElementById('weaponsText').value,
+          medkit: document.getElementById('medkitCount').value,
+          stim: document.getElementById('stimCount').value,
+          ammo: {
+            small: document.getElementById('ammoSmall').value,
+            shotgun: document.getElementById('ammoShotgun').value,
+            rifle: document.getElementById('ammoRifle').value,
+            heavy: document.getElementById('ammoHeavy').value,
+            custom1: document.getElementById('customAmmo1').value,
+            custom2: document.getElementById('customAmmo2').value
+          }
+        },
+        bio: {
+          name: document.getElementById('bioName').value,
+          appearance: document.getElementById('bioAppearance').value,
+          history: document.getElementById('bioHistory').value
+        },
+        scpDatabase: scpEntries
+      };
+    }
+
+    // ========== ПРИМЕНЕНИЕ ДАННЫХ ==========
+    function applyProfileData(data) {
+      if (!data) return;
+      // роль
+      if (data.role) {
+        roleSelect.value = data.role;
+        updateRole();
+      }
+      // имя
+      document.getElementById('charName').innerText = data.name || '';
+      document.getElementById('hpInput').value = data.hp || '12 / 12';
+      document.getElementById('kdInput').value = data.kd || '10';
+      
+      // конечности
+      if (data.limbs) {
+        data.limbs.forEach((l, i) => { if (limbs[i]) limbs[i].value = l.value; });
+        renderLimbs();
+      }
+      
+      document.getElementById('diseaseText').value = data.diseases || '';
+      document.getElementById('traitsText').value = data.traits || '';
+      
+      const inv = data.inventory || {};
+      document.getElementById('itemsText').value = inv.items || '';
+      document.getElementById('weaponsText').value = inv.weapons || '';
+      document.getElementById('medkitCount').value = inv.medkit || '0';
+      document.getElementById('stimCount').value = inv.stim || '0';
+      const ammo = inv.ammo || {};
+      document.getElementById('ammoSmall').value = ammo.small || '0';
+      document.getElementById('ammoShotgun').value = ammo.shotgun || '0';
+      document.getElementById('ammoRifle').value = ammo.rifle || '0';
+      document.getElementById('ammoHeavy').value = ammo.heavy || '0';
+      document.getElementById('customAmmo1').value = ammo.custom1 || '';
+      document.getElementById('customAmmo2').value = ammo.custom2 || '';
+      
+      const bio = data.bio || {};
+      document.getElementById('bioName').value = bio.name || '';
+      document.getElementById('bioAppearance').value = bio.appearance || '';
+      document.getElementById('bioHistory').value = bio.history || '';
+      
+      // SCP база
+      if (data.scpDatabase) {
+        saveScpToStorage(data.scpDatabase);
+        scpEntries = data.scpDatabase.slice();
+        renderScp();
+      }
+      
+      // применим доп. поля роли после обновления
+      setTimeout(() => {
+        if (data.roleExtra) {
+          if (data.role === 'researcher' && data.roleExtra.clearance) {
+            const sel = document.getElementById('clearanceLevel');
+            if (sel) sel.value = data.roleExtra.clearance;
+          } else if (data.role === 'guard' && data.roleExtra.guardCard) {
+            const sel = document.getElementById('guardCardSelect');
+            if (sel) sel.value = data.roleExtra.guardCard;
+          }
+        }
+      }, 20);
+    }
+
+    // ========== СОХРАНЕНИЕ В ФАЙЛ ==========
+    document.getElementById('saveProfileBtn').addEventListener('click', () => {
+      const data = collectProfileData();
+      const jsonStr = JSON.stringify(data, null, 2);
+      const blob = new Blob([jsonStr], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `scp_profile_${data.name || 'character'}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    // ========== ЗАГРУЗКА ИЗ ФАЙЛА ==========
+    const fileInput = document.getElementById('loadFileInput');
+    document.getElementById('loadProfileBtn').addEventListener('click', () => {
+      fileInput.click();
+    });
+    fileInput.addEventListener('change', (e) => {
+      const file = fileInput.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        try {
+          const data = JSON.parse(ev.target.result);
+          applyProfileData(data);
+        } catch (ex) {
+          alert('Ошибка чтения JSON-файла');
+        }
+        fileInput.value = '';
+      };
+      reader.readAsText(file);
+    });
+
+    // Автосохранение в localStorage (опционально, но для удобства сохраняем при изменениях)
+    window.addEventListener('beforeunload', () => {
+      // не обязательно, но можем сохранить в localStorage
+      localStorage.setItem('scp_autosave', JSON.stringify(collectProfileData()));
+    });
+    // Восстановление из автосохранения при загрузке страницы (если есть)
+    const autosave = localStorage.getItem('scp_autosave');
+    if (autosave) {
+      try { applyProfileData(JSON.parse(autosave)); } catch(e) {}
+    }
+  })();
+</script>
+</body>
+</html>
