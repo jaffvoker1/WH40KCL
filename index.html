@@ -299,6 +299,20 @@
       border-color: #b55a5a;
     }
 
+    /* Роль — перенос доп. элементов на новую строку */
+    .role-line {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .role-extra-line {
+      margin-top: 6px;
+      margin-left: 130px; /* ширина stat-label */
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
     /* конечности */
     .limb-name {
       width: 95px;
@@ -515,7 +529,7 @@
     .stat-line {
       display: flex;
       margin-bottom: 14px;
-      align-items: center;
+      align-items: flex-start;
     }
   </style>
 </head>
@@ -549,18 +563,22 @@
           <span class="stat-label">Имя</span>
           <span class="stat-value" id="charName" contenteditable="true"></span>
         </div>
-        <!-- Роль -->
-        <div class="stat-line">
-          <span class="stat-label">Роль</span>
-          <div class="role-selector" style="display:flex; gap:10px;">
-            <select id="roleSelect" style="padding:8px 16px; font-weight:bold;">
-              <option value="class-d" selected>Класс-D</option>
-              <option value="researcher">Исследователь</option>
-              <option value="guard">Охрана</option>
-              <option value="taskforce">Группа Захвата</option>
-              <option value="scp">SCP-Объект</option>
-            </select>
-            <span id="roleExtraUi" style="margin-left:5px;"></span>
+        <!-- Роль (с переносом доп. элементов) -->
+        <div style="margin-bottom:14px;">
+          <div class="role-line">
+            <span class="stat-label">Роль</span>
+            <div class="role-selector" style="display:flex; gap:10px;">
+              <select id="roleSelect" style="padding:8px 16px; font-weight:bold;">
+                <option value="class-d" selected>Класс-D</option>
+                <option value="researcher">Исследователь</option>
+                <option value="guard">Охрана</option>
+                <option value="taskforce">Группа Захвата</option>
+                <option value="scp">SCP-Объект</option>
+              </select>
+            </div>
+          </div>
+          <div id="roleExtraContainer" class="role-extra-line">
+            <span id="roleExtraUi"></span>
           </div>
         </div>
         <!-- Характеристики -->
@@ -701,17 +719,24 @@
     // ========== РОЛЬ И ТЕМЫ ==========
     const sheet = document.getElementById('mainSheet');
     const roleSelect = document.getElementById('roleSelect');
-    const roleExtra = document.getElementById('roleExtraUi');
+    const roleExtraUi = document.getElementById('roleExtraUi');
     function updateRole() {
       const role = roleSelect.value;
       sheet.setAttribute('data-role', role);
-      let extra = '';
-      if (role === 'researcher') extra = `<select id="clearanceLevel" style="margin-left:8px; padding:6px;"><option>Уровень 1</option><option>Уровень 2</option><option selected>Уровень 3</option><option>Уровень 4</option><option>Уровень 5</option></select>`;
-      else if (role === 'guard') extra = `<select id="guardCardSelect" style="margin-left:8px;"><option>Карта 1</option><option>Карта 2</option><option selected>Карта 3</option></select> <span style="margin-left:12px; background:#15445e; padding:6px 14px; border-radius:30px;">🔒 Комната снабжения</span>`;
-      else if (role === 'taskforce') extra = `<span style="margin-left:8px; background:#782a2a; padding:6px 18px; border-radius:30px; border:2px solid #c44;">🎫 Мастер-карта</span>`;
-      else if (role === 'scp') extra = `<span style="margin-left:8px; background:#4a1515; padding:6px 18px; border-radius:30px; border:2px solid #a11;">⚠️ Класс: Кетер</span>`;
-      else extra = `<span style="margin-left:8px; color:#e0b087;">[ограничен]</span>`;
-      roleExtra.innerHTML = extra;
+      let extraHtml = '';
+      if (role === 'researcher') {
+        extraHtml = `<select id="clearanceLevel" style="padding:6px 12px; border-radius:20px;"><option>Уровень 1</option><option>Уровень 2</option><option selected>Уровень 3</option><option>Уровень 4</option><option>Уровень 5</option></select>`;
+      } else if (role === 'guard') {
+        extraHtml = `<select id="guardCardSelect" style="padding:6px 12px; border-radius:20px;"><option>Карта 1</option><option>Карта 2</option><option selected>Карта 3</option></select> 
+                     <span style="background:#15445e; padding:6px 16px; border-radius:30px; margin-left:6px;">🔒 Комната снабжения</span>`;
+      } else if (role === 'taskforce') {
+        extraHtml = `<span style="background:#782a2a; padding:6px 18px; border-radius:30px; border:2px solid #c44;">🎫 Мастер-карта</span>`;
+      } else if (role === 'scp') {
+        extraHtml = `<span style="background:#4a1515; padding:6px 18px; border-radius:30px; border:2px solid #a11;">⚠️ Класс: Кетер</span>`;
+      } else {
+        extraHtml = `<span style="color:#e0b087; padding:6px 0;">[ограничен]</span>`;
+      }
+      roleExtraUi.innerHTML = extraHtml;
     }
     roleSelect.addEventListener('change', updateRole);
     updateRole();
@@ -767,14 +792,12 @@
       } else alert('Уже в базе');
     });
 
-    // Инициализация SCP
     if (!localStorage.getItem(STORAGE_KEY)) saveScpToStorage(['002','173','049']);
     else scpEntries = loadScpFromStorage();
     renderScp();
 
     // ========== СБОР ДАННЫХ ПРОФИЛЯ ==========
     function collectProfileData() {
-      // роль и доп элементы
       let clearance = null, guardCard = null;
       if (roleSelect.value === 'researcher') {
         const sel = document.getElementById('clearanceLevel');
@@ -787,10 +810,7 @@
       return {
         version: "1.0",
         role: roleSelect.value,
-        roleExtra: {
-          clearance: clearance,
-          guardCard: guardCard
-        },
+        roleExtra: { clearance, guardCard },
         name: document.getElementById('charName').innerText,
         hp: document.getElementById('hpInput').value,
         kd: document.getElementById('kdInput').value,
@@ -823,17 +843,12 @@
     // ========== ПРИМЕНЕНИЕ ДАННЫХ ==========
     function applyProfileData(data) {
       if (!data) return;
-      // роль
-      if (data.role) {
-        roleSelect.value = data.role;
-        updateRole();
-      }
-      // имя
+      roleSelect.value = data.role || 'class-d';
+      updateRole();
       document.getElementById('charName').innerText = data.name || '';
       document.getElementById('hpInput').value = data.hp || '12 / 12';
       document.getElementById('kdInput').value = data.kd || '10';
       
-      // конечности
       if (data.limbs) {
         data.limbs.forEach((l, i) => { if (limbs[i]) limbs[i].value = l.value; });
         renderLimbs();
@@ -860,14 +875,12 @@
       document.getElementById('bioAppearance').value = bio.appearance || '';
       document.getElementById('bioHistory').value = bio.history || '';
       
-      // SCP база
       if (data.scpDatabase) {
         saveScpToStorage(data.scpDatabase);
         scpEntries = data.scpDatabase.slice();
         renderScp();
       }
       
-      // применим доп. поля роли после обновления
       setTimeout(() => {
         if (data.roleExtra) {
           if (data.role === 'researcher' && data.roleExtra.clearance) {
@@ -915,12 +928,9 @@
       reader.readAsText(file);
     });
 
-    // Автосохранение в localStorage (опционально, но для удобства сохраняем при изменениях)
     window.addEventListener('beforeunload', () => {
-      // не обязательно, но можем сохранить в localStorage
       localStorage.setItem('scp_autosave', JSON.stringify(collectProfileData()));
     });
-    // Восстановление из автосохранения при загрузке страницы (если есть)
     const autosave = localStorage.getItem('scp_autosave');
     if (autosave) {
       try { applyProfileData(JSON.parse(autosave)); } catch(e) {}
