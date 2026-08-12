@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+  <title>Лист персонажа · Warhammer 40k · DnD</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', 'Garamond', system-ui, sans-serif;
+    }
+    body {
+      background: #0b0d0f;
+      background-image: radial-gradient(circle at 20% 30%, #1a1e22 0%, #030405 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .sheet {
+      max-width: 1000px;
+      width: 100%;
+      background: #cfc6b0;
+      background: linear-gradient(145deg, #d9cfb8 0%, #b8ab92 100%);
+      padding: 28px 24px 32px;
+      border-radius: 40px 12px 40px 12px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 0 2px #7b6e5a, 0 0 0 6px #3d3529;
+      border: 1px solid #b8a68b;
+    }
+
+    /* ===== ВЕРХНЯЯ СТРОКА: ХАРАКТЕРИСТИКИ (слева) + ИНФО (справа) ===== */
+    .top-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px 30px;
+      margin-bottom: 10px;
+    }
+
+    /* ===== ХАРАКТЕРИСТИКИ — такие же ячейки, как в мини-таблице ===== */
+    .stats-col {
+      flex: 0 1 340px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px 10px;
+      background: rgba(48, 38, 28, 0.2);
+      padding: 10px 14px 12px 14px;
+      border-radius: 24px 6px 24px 6px;
+      border: 1px solid #826f56;
+      align-content: start;
+    }
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(0, 0, 0, 0.04);
+      padding: 2px 6px 2px 8px;
+      border-radius: 20px;
+      border-left: 3px solid #8a7a64;
+    }
+    .stat-item label {
+      font-weight: 700;
+      font-size: 0.62rem;
+      text-transform: uppercase;
+      color: #2d241a;
+      letter-spacing: 0.3px;
+      white-space: nowrap;
+      min-width: 56px;
+      flex-shrink: 0;
+    }
+    .stat-item input[type="number"] {
+      width: 40px;
+      background: rgba(20, 15, 10, 0.08);
+      border: none;
+      border-bottom: 2px solid #5b4c38;
+      font-size: 0.95rem;
+      font-weight: 600;
+      padding: 1px 2px;
+      text-align: center;
+      color: #1f170e;
+      outline: none;
+      border-radius: 0;
+      flex-shrink: 0;
+    }
+    .stat-item input[type="number"]:focus {
+      border-bottom-color: #a5381f;
+      background: rgba(165, 56, 31, 0.06);
+    }
+    .stat-mod {
+      font-weight: 700;
+      font-size: 0.8rem;
+      color: #2a1f14;
+      min-width: 24px;
+      text-align: center;
+      background: rgba(0,0,0,0.06);
+      padding: 0 4px;
+      border-radius: 12px;
+      flex-shrink: 0;
+    }
+
+    /* ===== ПРАВАЯ КОЛОНКА: Имя, Роль, мини-таблица ===== */
+    .info-col {
+      flex: 1 1 320px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      background: rgba(48, 38, 28, 0.15);
+      padding: 10px 16px 14px 16px;
+      border-radius: 24px 6px 24px 6px;
+      border: 1px solid #826f56;
+    }
+    .info-field {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+    .info-field label {
+      font-weight: 700;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      color: #2d241a;
+      min-width: 70px;
+      flex-shrink: 0;
+    }
+    .info-field input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid #5b4c38;
+      font-size: 1rem;
+      padding: 2px 4px;
+      color: #1f170e;
+      outline: none;
+    }
+    .info-field input:focus {
+      border-bottom-color: #a5381f;
+    }
+
+    /* ===== МИНИ-ТАБЛИЦА: 2 строки × 3 столбца ===== */
+    .mini-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 4px 8px;
+      margin-top: 6px;
+      padding-top: 8px;
+      border-top: 1px dashed #7b6e5a;
+    }
+    .mini-cell {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(0, 0, 0, 0.04);
+      padding: 2px 6px 2px 8px;
+      border-radius: 20px;
+      border-left: 3px solid #8a7a64;
+    }
+    .mini-cell label {
+      font-weight: 700;
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      color: #2d241a;
+      letter-spacing: 0.3px;
+      white-space: nowrap;
+      min-width: 52px;
+      flex-shrink: 0;
+    }
+    .mini-cell input {
+      flex: 1;
+      min-width: 30px;
+      max-width: 60px;
+      background: rgba(20, 15, 10, 0.08);
+      border: none;
+      border-bottom: 2px solid #5b4c38;
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 1px 2px;
+      text-align: center;
+      color: #1f170e;
+      outline: none;
+      border-radius: 0;
+    }
+    .mini-cell input:focus {
+      border-bottom-color: #a5381f;
+      background: rgba(165, 56, 31, 0.06);
+    }
+
+    /* ===== ОСТАЛЬНЫЕ БЛОКИ ===== */
+    .block {
+      margin-top: 14px;
+    }
+    .block-label {
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      color: #2d241a;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border-bottom: 2px dotted #6a5b44;
+      padding-bottom: 2px;
+      margin-bottom: 6px;
+    }
+    .block-label span {
+      font-weight: 400;
+      font-size: 0.75rem;
+      color: #4d3d2c;
+    }
+
+    .weapon-list, .ability-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .weapon-row, .ability-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px 12px;
+      background: rgba(0,0,0,0.05);
+      padding: 2px 8px 2px 6px;
+      border-radius: 30px;
+      border-left: 3px solid #7b6446;
+    }
+    .weapon-row input, .ability-row input {
+      background: transparent;
+      border: none;
+      border-bottom: 1px dashed #5f4d36;
+      padding: 2px 4px;
+      font-size: 0.9rem;
+      color: #1f170e;
+      outline: none;
+      flex: 1 1 80px;
+      min-width: 60px;
+    }
+    .weapon-row input:focus, .ability-row input:focus {
+      border-bottom-color: #a5381f;
+    }
+    .weapon-row .w-dmg {
+      max-width: 60px;
+      flex: 0 1 60px;
+    }
+    .add-btn {
+      background: #3d3326;
+      color: #eedbc0;
+      border: none;
+      border-radius: 40px;
+      padding: 2px 14px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.1s;
+      border-bottom: 2px solid #6e4d28;
+      margin-top: 2px;
+      align-self: flex-start;
+    }
+    .add-btn:hover {
+      background: #5a4a38;
+    }
+    .add-btn:active {
+      transform: translateY(2px);
+      border-bottom-width: 0;
+    }
+    .del-btn {
+      background: transparent;
+      border: none;
+      color: #6b3f2a;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 1rem;
+      line-height: 1;
+      padding: 0 4px;
+    }
+    .del-btn:hover {
+      color: #a5381f;
+    }
+
+    .notes-area {
+      width: 100%;
+      background: rgba(20, 15, 10, 0.08);
+      border: 1px solid #7b6e5a;
+      border-radius: 12px;
+      padding: 8px 12px;
+      font-size: 0.95rem;
+      color: #1f170e;
+      resize: vertical;
+      min-height: 60px;
+      outline: none;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .notes-area:focus {
+      border-color: #a5381f;
+      background: rgba(165, 56, 31, 0.05);
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 24px;
+      justify-content: flex-end;
+    }
+    .actions button {
+      background: #2f261b;
+      border: none;
+      color: #f0e2cc;
+      font-weight: 700;
+      padding: 8px 24px;
+      border-radius: 40px;
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+      border-bottom: 4px solid #6e4d28;
+      cursor: pointer;
+      transition: 0.08s linear;
+      box-shadow: 0 2px 0 #0f0b08;
+    }
+    .actions button:hover {
+      background: #4a3b2c;
+    }
+    .actions button:active {
+      transform: translateY(2px);
+      border-bottom-width: 2px;
+    }
+    .actions .save-btn {
+      background: #1f3d2e;
+      border-bottom-color: #2a6b47;
+    }
+    .actions .save-btn:hover {
+      background: #2a5a3e;
+    }
+    .actions .load-btn {
+      background: #3d2f4a;
+      border-bottom-color: #6a4a7a;
+    }
+    .actions .load-btn:hover {
+      background: #55426b;
+    }
+
+    @media (max-width: 700px) {
+      .stats-col { grid-template-columns: 1fr; flex: 1 1 100%; }
+      .top-row { flex-direction: column; }
+      .mini-grid { grid-template-columns: 1fr 1fr; }
+      .weapon-row { flex-wrap: wrap; }
+    }
+    @media (max-width: 480px) {
+      .mini-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="sheet" id="sheetContainer">
+
+  <!-- ВЕРХНЯЯ СТРОКА: ХАРАКТЕРИСТИКИ (слева) + ИНФО (справа) -->
+  <div class="top-row">
+    <!-- Характеристики: такие же ячейки, как в мини-таблице -->
+    <div class="stats-col" id="statsContainer">
+      <div class="stat-item"><label>Сила</label><input type="number" class="stat-val" data-stat="str" value="18"><span class="stat-mod" id="mod-str">+4</span></div>
+      <div class="stat-item"><label>Телосложение</label><input type="number" class="stat-val" data-stat="con" value="16"><span class="stat-mod" id="mod-con">+3</span></div>
+      <div class="stat-item"><label>Ловкость</label><input type="number" class="stat-val" data-stat="dex" value="14"><span class="stat-mod" id="mod-dex">+2</span></div>
+      <div class="stat-item"><label>Харизма</label><input type="number" class="stat-val" data-stat="cha" value="12"><span class="stat-mod" id="mod-cha">+1</span></div>
+      <div class="stat-item"><label>Псайкерство</label><input type="number" class="stat-val" data-stat="psy" value="10"><span class="stat-mod" id="mod-psy">0</span></div>
+      <div class="stat-item"><label>Вера</label><input type="number" class="stat-val" data-stat="fth" value="11"><span class="stat-mod" id="mod-fth">0</span></div>
+    </div>
+
+    <!-- Правая колонка: Имя, Роль, и мини-таблица -->
+    <div class="info-col">
+      <div class="info-field"><label>Имя</label><input type="text" id="charName" value="Альбрих" placeholder="имя"></div>
+      <div class="info-field"><label>Роль/Персонаж</label><input type="text" id="charRole" value="Штурмовой сержант" placeholder="роль"></div>
+
+      <!-- МИНИ-ТАБЛИЦА: 2 строки × 3 столбца -->
+      <div class="mini-grid">
+        <!-- Строка 1: Пост.Хиты | Хиты | Врем.Хиты -->
+        <div class="mini-cell"><label>Пост. Хиты</label><input type="text" id="permanentHits" value="18" placeholder="0"></div>
+        <div class="mini-cell"><label>Хиты</label><input type="text" id="hits" value="12" placeholder="0"></div>
+        <div class="mini-cell"><label>Врем.Хиты</label><input type="text" id="tempHits" value="4" placeholder="0"></div>
+
+        <!-- Строка 2: Инициатива | КД | Ест.КД -->
+        <div class="mini-cell"><label>Инициатива</label><input type="text" id="initiative" value="+3" placeholder="+0"></div>
+        <div class="mini-cell"><label>КД</label><input type="text" id="armorClass" value="16" placeholder="0"></div>
+        <div class="mini-cell"><label>Ест.КД</label><input type="text" id="naturalArmor" value="14" placeholder="0"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ОРУЖИЕ -->
+  <div class="block">
+    <div class="block-label">Оружие <span>(урон / характеристики)</span></div>
+    <div class="weapon-list" id="weaponList">
+      <div class="weapon-row"><input type="text" value="Цепной меч" placeholder="название"><input type="text" class="w-dmg" value="1d10+4" placeholder="урон"><input type="text" placeholder="свойства" value="силовой"></div>
+      <div class="weapon-row"><input type="text" value="Болт-пистолет" placeholder="название"><input type="text" class="w-dmg" value="1d6+2" placeholder="урон"><input type="text" placeholder="свойства" value="пистолет"></div>
+    </div>
+    <button class="add-btn" id="addWeaponBtn">+ Добавить оружие</button>
+  </div>
+
+  <!-- ОСОБЕННОСТЬ -->
+  <div class="block">
+    <div class="block-label">Особенность</div>
+    <input type="text" id="feature" value="Ярость Императора: +2 к атаке в ближнем бою" placeholder="особенность" style="width:100%; background:transparent; border:none; border-bottom:2px solid #5b4c38; padding:4px 6px; font-size:1rem; outline:none;">
+  </div>
+
+  <!-- НЕДОСТАТОК -->
+  <div class="block">
+    <div class="block-label">Недостаток</div>
+    <input type="text" id="flaw" value="Гнев: штраф -2 к защите при низком здоровье" placeholder="недостаток" style="width:100%; background:transparent; border:none; border-bottom:2px solid #5b4c38; padding:4px 6px; font-size:1rem; outline:none;">
+  </div>
+
+  <!-- СПОСОБНОСТИ -->
+  <div class="block">
+    <div class="block-label">Способности</div>
+    <div class="ability-list" id="abilityList">
+      <div class="ability-row"><input type="text" value="Тактика ближнего боя" placeholder="способность"></div>
+      <div class="ability-row"><input type="text" value="Пси-щит" placeholder="способность"></div>
+      <div class="ability-row"><input type="text" value="Железная воля" placeholder="способность"></div>
+    </div>
+    <button class="add-btn" id="addAbilityBtn">+ Добавить способность</button>
+  </div>
+
+  <!-- ЗАМЕТКИ -->
+  <div class="block">
+    <div class="block-label">Заметки</div>
+    <textarea class="notes-area" id="notes" placeholder="Дополнительные заметки, тактики, история...">Служит в ордене Космических Волков. Участвовал в кампании на Армагеддоне.</textarea>
+  </div>
+
+  <!-- КНОПКИ -->
+  <div class="actions">
+    <button class="save-btn" id="saveBtn">💾 Сохранить JSON</button>
+    <button class="load-btn" id="loadBtn">📂 Загрузить JSON</button>
+    <button id="resetBtn">↺ Сбросить</button>
+  </div>
+</div>
+
+<script>
+  (function() {
+    // ===== РАСЧЁТ МОДИФИКАТОРОВ =====
+    function calcMod(value) {
+      const v = parseInt(value, 10);
+      if (isNaN(v)) return 0;
+      return Math.floor((v - 10) / 2);
+    }
+    function formatMod(mod) {
+      return mod >= 0 ? '+' + mod : '' + mod;
+    }
+
+    function updateAllMods() {
+      document.querySelectorAll('.stat-val').forEach(input => {
+        const stat = input.dataset.stat;
+        const modSpan = document.getElementById('mod-' + stat);
+        if (modSpan) {
+          const val = parseInt(input.value, 10);
+          const mod = calcMod(val);
+          modSpan.textContent = formatMod(mod);
+        }
+      });
+    }
+
+    function bindStatEvents() {
+      document.querySelectorAll('.stat-val').forEach(input => {
+        input.addEventListener('input', updateAllMods);
+        input.addEventListener('change', updateAllMods);
+      });
+    }
+
+    // ===== ДОБАВЛЕНИЕ СТРОК =====
+    function addWeaponRow(weaponList, nameVal, dmgVal, propVal) {
+      const row = document.createElement('div');
+      row.className = 'weapon-row';
+      row.innerHTML = `
+        <input type="text" value="${nameVal || ''}" placeholder="название">
+        <input type="text" class="w-dmg" value="${dmgVal || ''}" placeholder="урон">
+        <input type="text" value="${propVal || ''}" placeholder="свойства">
+        <button class="del-btn" title="удалить">✕</button>
+      `;
+      row.querySelector('.del-btn').addEventListener('click', function() {
+        if (weaponList.children.length > 1) row.remove();
+        else alert('Должна оставаться хотя бы одна строка.');
+      });
+      weaponList.appendChild(row);
+    }
+
+    function addAbilityRow(abilityList, textVal) {
+      const row = document.createElement('div');
+      row.className = 'ability-row';
+      row.innerHTML = `
+        <input type="text" value="${textVal || ''}" placeholder="способность">
+        <button class="del-btn" title="удалить">✕</button>
+      `;
+      row.querySelector('.del-btn').addEventListener('click', function() {
+        if (abilityList.children.length > 1) row.remove();
+        else alert('Должна оставаться хотя бы одна строка.');
+      });
+      abilityList.appendChild(row);
+    }
+
+    // ===== СБОР И ЗАПОЛНЕНИЕ ДАННЫХ =====
+    function collectData() {
+      const data = {};
+      data.name = document.getElementById('charName').value;
+      data.role = document.getElementById('charRole').value;
+
+      const stats = {};
+      document.querySelectorAll('.stat-val').forEach(input => {
+        stats[input.dataset.stat] = parseInt(input.value, 10) || 0;
+      });
+      data.stats = stats;
+
+      data.permanentHits = document.getElementById('permanentHits').value;
+      data.hits = document.getElementById('hits').value;
+      data.tempHits = document.getElementById('tempHits').value;
+      data.initiative = document.getElementById('initiative').value;
+      data.armorClass = document.getElementById('armorClass').value;
+      data.naturalArmor = document.getElementById('naturalArmor').value;
+
+      const weapons = [];
+      document.querySelectorAll('#weaponList .weapon-row').forEach(row => {
+        const inputs = row.querySelectorAll('input');
+        if (inputs.length >= 3) {
+          weapons.push({ name: inputs[0].value, damage: inputs[1].value, properties: inputs[2].value });
+        }
+      });
+      data.weapons = weapons;
+
+      data.feature = document.getElementById('feature').value;
+      data.flaw = document.getElementById('flaw').value;
+
+      const abilities = [];
+      document.querySelectorAll('#abilityList .ability-row input').forEach(inp => abilities.push(inp.value));
+      data.abilities = abilities;
+
+      data.notes = document.getElementById('notes').value;
+      return data;
+    }
+
+    function fillData(data) {
+      if (!data) return;
+      if (data.name !== undefined) document.getElementById('charName').value = data.name;
+      if (data.role !== undefined) document.getElementById('charRole').value = data.role;
+
+      if (data.stats) {
+        document.querySelectorAll('.stat-val').forEach(input => {
+          const stat = input.dataset.stat;
+          if (data.stats[stat] !== undefined) input.value = data.stats[stat];
+        });
+        updateAllMods();
+      }
+
+      if (data.permanentHits !== undefined) document.getElementById('permanentHits').value = data.permanentHits;
+      if (data.hits !== undefined) document.getElementById('hits').value = data.hits;
+      if (data.tempHits !== undefined) document.getElementById('tempHits').value = data.tempHits;
+      if (data.initiative !== undefined) document.getElementById('initiative').value = data.initiative;
+      if (data.armorClass !== undefined) document.getElementById('armorClass').value = data.armorClass;
+      if (data.naturalArmor !== undefined) document.getElementById('naturalArmor').value = data.naturalArmor;
+
+      const weaponList = document.getElementById('weaponList');
+      weaponList.innerHTML = '';
+      if (data.weapons && data.weapons.length) {
+        data.weapons.forEach(w => addWeaponRow(weaponList, w.name || '', w.damage || '', w.properties || ''));
+      } else {
+        addWeaponRow(weaponList, '', '', '');
+      }
+
+      if (data.feature !== undefined) document.getElementById('feature').value = data.feature;
+      if (data.flaw !== undefined) document.getElementById('flaw').value = data.flaw;
+
+      const abilityList = document.getElementById('abilityList');
+      abilityList.innerHTML = '';
+      if (data.abilities && data.abilities.length) {
+        data.abilities.forEach(text => addAbilityRow(abilityList, text || ''));
+      } else {
+        addAbilityRow(abilityList, '');
+      }
+
+      if (data.notes !== undefined) document.getElementById('notes').value = data.notes;
+    }
+
+    // ===== СОХРАНЕНИЕ / ЗАГРУЗКА =====
+    function saveToFile() {
+      const data = collectData();
+      const name = data.name || 'персонаж';
+      const json = JSON.stringify(data, null, 2);
+      const blob = new Blob([json], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${name}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function loadFromFile() {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = '.json';
+      input.onchange = function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+          try {
+            const data = JSON.parse(ev.target.result);
+            fillData(data);
+          } catch (err) {
+            alert('Ошибка чтения JSON: ' + err.message);
+          }
+        };
+        reader.readAsText(file);
+      };
+      input.click();
+    }
+
+    function resetToDefault() { location.reload(); }
+
+    // ===== ИНИЦИАЛИЗАЦИЯ =====
+    function init() {
+      updateAllMods();
+      bindStatEvents();
+
+      document.getElementById('addWeaponBtn').addEventListener('click', function() {
+        addWeaponRow(document.getElementById('weaponList'), '', '', '');
+      });
+      document.getElementById('addAbilityBtn').addEventListener('click', function() {
+        addAbilityRow(document.getElementById('abilityList'), '');
+      });
+
+      document.getElementById('saveBtn').addEventListener('click', saveToFile);
+      document.getElementById('loadBtn').addEventListener('click', loadFromFile);
+      document.getElementById('resetBtn').addEventListener('click', resetToDefault);
+    }
+
+    init();
+  })();
+</script>
+</body>
+</html>
