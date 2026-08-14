@@ -53,7 +53,7 @@
       display: flex;
       flex-direction: column;
       gap: 12px;
-      margin: 18px 0;
+      margin: 18px 0 24px;
     }
     .menu-item {
       display: flex;
@@ -87,13 +87,6 @@
       font-size: 0.7rem;
       color: #4d3d2c;
       margin-top: 1px;
-    }
-    .menu-item .info p code {
-      background: rgba(0,0,0,0.07);
-      padding: 1px 6px;
-      border-radius: 6px;
-      font-family: 'Courier New', monospace;
-      font-size: 0.65rem;
     }
     .menu-item .btn {
       background: #2f261b;
@@ -133,29 +126,23 @@
     .menu-item .btn-list:hover {
       background: #55426b;
     }
-    .file-info {
-      background: rgba(0,0,0,0.05);
-      border-radius: 12px;
-      padding: 8px 14px;
-      margin: 8px 0 2px;
-      font-size: 0.65rem;
-      color: #3b3124;
-    }
-    .file-info code {
-      background: rgba(0,0,0,0.07);
-      padding: 1px 6px;
-      border-radius: 6px;
-      font-family: 'Courier New', monospace;
-      font-size: 0.65rem;
-    }
+
     .footer {
       margin-top: 20px;
-      font-size: 0.55rem;
+      font-size: 0.7rem;
       color: #4d3d2c;
       letter-spacing: 1.5px;
       border-top: 1px solid #7b6e5a;
-      padding-top: 12px;
+      padding-top: 14px;
+      min-height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-style: italic;
+      font-weight: 600;
+      transition: opacity 0.3s;
     }
+
     @media (max-width: 600px) {
       .container { padding: 20px 14px; }
       .menu-item { flex-wrap: wrap; gap: 10px; }
@@ -175,29 +162,104 @@
       <div class="icon">📜</div>
       <div class="info">
         <h2>Лист персонажа</h2>
-        <p>Открыть <code>list.html</code></p>
+        <p>Открыть редактор</p>
       </div>
       <a href="list.html" class="btn btn-list" target="_blank">Открыть</a>
     </div>
 
-    <!-- Справочник (ссылка на Google Docs) -->
+    <!-- Справочник -->
     <div class="menu-item">
       <div class="icon">📖</div>
       <div class="info">
         <h2>Справочник</h2>
-        <p>Открыть в <code>Google Docs</code></p>
+        <p>Открыть в Google Docs</p>
       </div>
       <a href="https://docs.google.com/document/d/1xRR8QmgXgFQgIsRDIdOYfboWbyFtWF3tDXE1YaOi5_A/edit?usp=drive_link" class="btn btn-pdf" target="_blank">Открыть</a>
     </div>
   </div>
 
-  <!-- Информация о файлах -->
-  <div class="file-info">
-    <code>index.html</code> · <code>list.html</code>
-    <span style="display:block; margin-top:2px; font-size:0.6rem; color:#5a4a38;">все файлы в одной папке</span>
-  </div>
-
-  <div class="footer">⚡ ИМПЕРАТОР ЗАЩИЩАЕТ ⚡</div>
+  <div class="footer" id="footerPhrase">⚡ ИМПЕРАТОР ЗАЩИЩАЕТ ⚡</div>
 </div>
+
+<script>
+  (function() {
+    // ===== ФРАЗЫ ПО ФРАКЦИЯМ =====
+    const factionPhrases = [
+      // Астартес
+      "Мы — его гнев, мы — его карающий меч.",
+      "Ничто не остановит боевого брата, кроме самой смерти.",
+      "Клятва дана, цель ясна — враг будет повержен.",
+      "Боевой дух и чистота оружия — вот наше знамя.",
+      "За Императора! За человечество!",
+      "Сталь и пламя — наша истинная суть.",
+      
+      // Гвардия Императора
+      "Миллионы жизней — цена одного шага к победе.",
+      "Мы — щит, мы — стена, мы не отступим.",
+      "Даже смерть — не повод бросить пост.",
+      "Наша кровь питает земли Империума.",
+      "Приказ есть приказ. Мы исполним.",
+      "Каждый павший — воин, каждый живой — герой.",
+      
+      // Сёстры Битвы
+      "Пламя веры сжигает ересь.",
+      "Божественный свет озаряет наш путь.",
+      "Мы — голос Императора в огне.",
+      "Чистота души — наше оружие.",
+      "Святая ярость не знает пощады.",
+      "Вера движет нами, ненависть ведёт.",
+      
+      // Силы Хаоса
+      "Тьма призывает, мы отвечаем.",
+      "Порча — это сила, сила — это свобода.",
+      "Мы — разрушение, пришедшее по воле богов.",
+      "Империум падёт, хаос воцарится.",
+      "Кровь для Бога Крови!",
+      "Реальность трещит по швам, мы идём.",
+      
+      // Эльдары
+      "На пути древних — лишь мудрость и смерть.",
+      "Мы были здесь до того, как вы научились дышать.",
+      "Наша цивилизация — вечная, как звёзды.",
+      "Каждое наше слово — нить судьбы.",
+      "Вы не поймёте, мы не объясним.",
+      "Пути резных танцуют между миров.",
+      
+      // Тау
+      "Ради Великого Блага — вперёд!",
+      "Мы — свет в тёмном будущем.",
+      "Технологии и разум — наше оружие.",
+      "Каждая смерть — шаг к гармонии.",
+      "Мы строим, а не разрушаем.",
+      "Дипломатия или плазма — выбор за вами.",
+      
+      // Тёмные Эльдары
+      "Боль — это искусство, страдание — это вдохновение.",
+      "Мы — тень, вы — лишь свет, который мы погасим.",
+      "В коморре погребены ваши надежды.",
+      "Каждое мгновение — охота, каждая душа — добыча.",
+      "Мы не бежим от боли — мы ею живём.",
+      "Вы — игрушки, мы — игроки."
+    ];
+
+    // ===== ВЫБОР СЛУЧАЙНОЙ ФРАЗЫ =====
+    function getRandomPhrase() {
+      const randomIndex = Math.floor(Math.random() * factionPhrases.length);
+      return factionPhrases[randomIndex];
+    }
+
+    // ===== УСТАНОВКА ФРАЗЫ =====
+    function setFooterPhrase() {
+      const footer = document.getElementById('footerPhrase');
+      if (footer) {
+        const phrase = getRandomPhrase();
+        footer.textContent = `⚔ ${phrase} ⚔`;
+      }
+    }
+
+    // ===== ЗАПУСК =====
+    document.addEventListener('DOMContentLoaded', setFooterPhrase);
+  })();
+</script>
 </body>
 </html>
