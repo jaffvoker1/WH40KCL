@@ -39,7 +39,7 @@
       margin-bottom: 10px;
     }
 
-    /* ===== ХАРАКТЕРИСТИКИ — такие же ячейки, как в мини-таблице ===== */
+    /* ===== ХАРАКТЕРИСТИКИ ===== */
     .stats-col {
       flex: 0 1 340px;
       display: grid;
@@ -98,6 +98,74 @@
       padding: 0 4px;
       border-radius: 12px;
       flex-shrink: 0;
+    }
+
+    /* ===== БОЕВОЙ ДУХ — две строки: значение и модификатор ===== */
+    .morale-block {
+      grid-column: 1 / -1;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      background: rgba(0, 0, 0, 0.06);
+      padding: 4px 12px 6px 8px;
+      border-radius: 20px;
+      border-left: 3px solid #b8863d;
+      margin-top: 2px;
+    }
+    .morale-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .morale-row label {
+      font-weight: 700;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      color: #2d241a;
+      letter-spacing: 0.3px;
+      white-space: nowrap;
+      min-width: 80px;
+    }
+    .morale-row input[type="number"] {
+      width: 50px;
+      background: rgba(20, 15, 10, 0.08);
+      border: none;
+      border-bottom: 2px solid #5b4c38;
+      font-size: 0.95rem;
+      font-weight: 600;
+      padding: 1px 2px;
+      text-align: center;
+      color: #1f170e;
+      outline: none;
+      border-radius: 0;
+    }
+    .morale-row input[type="number"]:focus {
+      border-bottom-color: #a5381f;
+      background: rgba(165, 56, 31, 0.06);
+    }
+    .morale-row .arrow {
+      color: #4d3d2c;
+      font-weight: 600;
+      font-size: 0.8rem;
+    }
+    .morale-result {
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: #1f170e;
+      background: rgba(0,0,0,0.06);
+      padding: 0 12px;
+      border-radius: 16px;
+      min-width: 40px;
+      text-align: center;
+    }
+    .morale-row .label-mod {
+      font-weight: 700;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      color: #2d241a;
+      letter-spacing: 0.3px;
+      white-space: nowrap;
+      min-width: 90px;
     }
 
     /* ===== ПРАВАЯ КОЛОНКА: Имя, Роль, мини-таблица ===== */
@@ -343,6 +411,7 @@
       .top-row { flex-direction: column; }
       .mini-grid { grid-template-columns: 1fr 1fr; }
       .weapon-row { flex-wrap: wrap; }
+      .morale-row { flex-wrap: wrap; }
     }
     @media (max-width: 480px) {
       .mini-grid { grid-template-columns: 1fr; }
@@ -354,7 +423,7 @@
 
   <!-- ВЕРХНЯЯ СТРОКА: ХАРАКТЕРИСТИКИ (слева) + ИНФО (справа) -->
   <div class="top-row">
-    <!-- Характеристики: такие же ячейки, как в мини-таблице -->
+    <!-- Характеристики + Боевой дух -->
     <div class="stats-col" id="statsContainer">
       <div class="stat-item"><label>Сила</label><input type="number" class="stat-val" data-stat="str" value="18"><span class="stat-mod" id="mod-str">+4</span></div>
       <div class="stat-item"><label>Телосложение</label><input type="number" class="stat-val" data-stat="con" value="16"><span class="stat-mod" id="mod-con">+3</span></div>
@@ -362,21 +431,30 @@
       <div class="stat-item"><label>Харизма</label><input type="number" class="stat-val" data-stat="cha" value="12"><span class="stat-mod" id="mod-cha">+1</span></div>
       <div class="stat-item"><label>Псайкерство</label><input type="number" class="stat-val" data-stat="psy" value="10"><span class="stat-mod" id="mod-psy">0</span></div>
       <div class="stat-item"><label>Вера</label><input type="number" class="stat-val" data-stat="fth" value="11"><span class="stat-mod" id="mod-fth">0</span></div>
+
+      <!-- БОЕВОЙ ДУХ — две строки -->
+      <div class="morale-block">
+        <div class="morale-row">
+          <label>Боевой Дух</label>
+          <input type="number" id="moraleInput" value="75" min="0" max="100">
+          <span class="arrow">→</span>
+        </div>
+        <div class="morale-row">
+          <span class="label-mod">Модификатор броска</span>
+          <span class="morale-result" id="moraleMod">0</span>
+        </div>
+      </div>
     </div>
 
-    <!-- Правая колонка: Имя, Роль, и мини-таблица -->
+    <!-- Правая колонка: Имя, Роль, мини-таблица -->
     <div class="info-col">
       <div class="info-field"><label>Имя</label><input type="text" id="charName" value="Альбрих" placeholder="имя"></div>
       <div class="info-field"><label>Роль/Персонаж</label><input type="text" id="charRole" value="Штурмовой сержант" placeholder="роль"></div>
 
-      <!-- МИНИ-ТАБЛИЦА: 2 строки × 3 столбца -->
       <div class="mini-grid">
-        <!-- Строка 1: Пост.Хиты | Хиты | Врем.Хиты -->
         <div class="mini-cell"><label>Пост. Хиты</label><input type="text" id="permanentHits" value="18" placeholder="0"></div>
         <div class="mini-cell"><label>Хиты</label><input type="text" id="hits" value="12" placeholder="0"></div>
         <div class="mini-cell"><label>Врем.Хиты</label><input type="text" id="tempHits" value="4" placeholder="0"></div>
-
-        <!-- Строка 2: Инициатива | КД | Ест.КД -->
         <div class="mini-cell"><label>Инициатива</label><input type="text" id="initiative" value="+3" placeholder="+0"></div>
         <div class="mini-cell"><label>КД</label><input type="text" id="armorClass" value="16" placeholder="0"></div>
         <div class="mini-cell"><label>Ест.КД</label><input type="text" id="naturalArmor" value="14" placeholder="0"></div>
@@ -433,7 +511,7 @@
 
 <script>
   (function() {
-    // ===== РАСЧЁТ МОДИФИКАТОРОВ =====
+    // ===== РАСЧЁТ МОДИФИКАТОРОВ ХАРАКТЕРИСТИК =====
     function calcMod(value) {
       const v = parseInt(value, 10);
       if (isNaN(v)) return 0;
@@ -455,11 +533,21 @@
       });
     }
 
-    function bindStatEvents() {
-      document.querySelectorAll('.stat-val').forEach(input => {
-        input.addEventListener('input', updateAllMods);
-        input.addEventListener('change', updateAllMods);
-      });
+    // ===== РАСЧЁТ БОЕВОГО ДУХА =====
+    function updateMorale() {
+      const input = document.getElementById('moraleInput');
+      const resultSpan = document.getElementById('moraleMod');
+      let val = parseInt(input.value, 10);
+      
+      // Ограничение от 0 до 100
+      if (isNaN(val) || val < 0) val = 0;
+      if (val > 100) val = 100;
+      input.value = val;
+
+      // Формула: (0.08 * значение - 6) с округлением вниз
+      const raw = 0.08 * val - 6;
+      const mod = Math.floor(raw);
+      resultSpan.textContent = mod >= 0 ? '+' + mod : '' + mod;
     }
 
     // ===== ДОБАВЛЕНИЕ СТРОК =====
@@ -505,6 +593,8 @@
       });
       data.stats = stats;
 
+      data.morale = parseInt(document.getElementById('moraleInput').value, 10) || 0;
+
       data.permanentHits = document.getElementById('permanentHits').value;
       data.hits = document.getElementById('hits').value;
       data.tempHits = document.getElementById('tempHits').value;
@@ -543,6 +633,11 @@
           if (data.stats[stat] !== undefined) input.value = data.stats[stat];
         });
         updateAllMods();
+      }
+
+      if (data.morale !== undefined) {
+        document.getElementById('moraleInput').value = data.morale;
+        updateMorale();
       }
 
       if (data.permanentHits !== undefined) document.getElementById('permanentHits').value = data.permanentHits;
@@ -616,7 +711,17 @@
     // ===== ИНИЦИАЛИЗАЦИЯ =====
     function init() {
       updateAllMods();
-      bindStatEvents();
+      updateMorale();
+
+      // События для характеристик
+      document.querySelectorAll('.stat-val').forEach(input => {
+        input.addEventListener('input', updateAllMods);
+        input.addEventListener('change', updateAllMods);
+      });
+
+      // Событие для боевого духа
+      document.getElementById('moraleInput').addEventListener('input', updateMorale);
+      document.getElementById('moraleInput').addEventListener('change', updateMorale);
 
       document.getElementById('addWeaponBtn').addEventListener('click', function() {
         addWeaponRow(document.getElementById('weaponList'), '', '', '');
