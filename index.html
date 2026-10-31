@@ -1,265 +1,355 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Warhammer 40k Custom List</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', 'Garamond', system-ui, sans-serif;
-    }
-    body {
-      background: #0b0d0f;
-      background-image: radial-gradient(circle at 20% 30%, #1a1e22 0%, #030405 100%);
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-    }
-    .container {
-      max-width: 700px;
-      width: 100%;
-      background: #cfc6b0;
-      background: linear-gradient(145deg, #d9cfb8 0%, #b8ab92 100%);
-      padding: 32px 28px;
-      border-radius: 40px 12px 40px 12px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 0 2px #7b6e5a, 0 0 0 6px #3d3529;
-      border: 1px solid #b8a68b;
-      text-align: center;
-    }
-    h1 {
-      font-size: 1.8rem;
-      font-weight: 700;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: #1f1b14;
-      text-shadow: 2px 2px 0 #a3927a;
-      margin-bottom: 4px;
-      font-family: 'Times New Roman', serif;
-    }
-    .subtitle {
-      font-size: 0.75rem;
-      color: #3b3124;
-      letter-spacing: 3px;
-      margin-bottom: 24px;
-      border-bottom: 2px solid #6a5b44;
-      padding-bottom: 10px;
-    }
-    .menu {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin: 18px 0 24px;
-    }
-    .menu-item {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      background: rgba(48, 38, 28, 0.2);
-      padding: 12px 18px;
-      border-radius: 30px 6px 30px 6px;
-      border: 1px solid #826f56;
-      transition: 0.15s;
-      text-align: left;
-    }
-    .menu-item:hover {
-      background: rgba(48, 38, 28, 0.35);
-      transform: translateX(3px);
-    }
-    .menu-item .icon {
-      font-size: 1.6rem;
-      min-width: 40px;
-    }
-    .menu-item .info {
-      flex: 1;
-    }
-    .menu-item .info h2 {
-      font-size: 0.95rem;
-      color: #1f170e;
-      font-weight: 700;
-      letter-spacing: 0.3px;
-    }
-    .menu-item .info p {
-      font-size: 0.7rem;
-      color: #4d3d2c;
-      margin-top: 1px;
-    }
-    .menu-item .btn {
-      background: #2f261b;
-      border: none;
-      color: #f0e2cc;
-      font-weight: 700;
-      padding: 6px 18px;
-      border-radius: 40px;
-      font-size: 0.75rem;
-      letter-spacing: 0.8px;
-      border-bottom: 3px solid #6e4d28;
-      cursor: pointer;
-      transition: 0.08s linear;
-      box-shadow: 0 2px 0 #0f0b08;
-      text-decoration: none;
-      display: inline-block;
-      white-space: nowrap;
-    }
-    .menu-item .btn:hover {
-      background: #4a3b2c;
-    }
-    .menu-item .btn:active {
-      transform: translateY(2px);
-      border-bottom-width: 1px;
-    }
-    .menu-item .btn-pdf {
-      background: #1f3d2e;
-      border-bottom-color: #2a6b47;
-    }
-    .menu-item .btn-pdf:hover {
-      background: #2a5a3e;
-    }
-    .menu-item .btn-list {
-      background: #3d2f4a;
-      border-bottom-color: #6a4a7a;
-    }
-    .menu-item .btn-list:hover {
-      background: #55426b;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bizarre Adventure</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
+        body { background: #0f0f0f; color: #ccc; padding: 10px; font-size: 14px; }
+        
+        :root {
+            --theme-color: #ff6600;
+            --theme-color-hover: #cc3300;
+        }
 
-    .footer {
-      margin-top: 20px;
-      font-size: 0.7rem;
-      color: #4d3d2c;
-      letter-spacing: 1.5px;
-      border-top: 1px solid #7b6e5a;
-      padding-top: 14px;
-      min-height: 50px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-style: italic;
-      font-weight: 600;
-      transition: opacity 0.3s;
-    }
+        .container { max-width: 1000px; margin: 0 auto; background: #1a1a1a; padding: 15px; border-radius: 5px; border: 1px solid var(--theme-color); }
+        h1 { text-align: center; color: var(--theme-color); font-size: 20px; margin-bottom: 15px; text-transform: uppercase; }
+        h3 { color: var(--theme-color); margin: 15px 0 10px; text-transform: uppercase; font-size: 14px; border-bottom: 1px solid #333; padding-bottom: 5px; }
+        
+        .controls { display: flex; gap: 5px; justify-content: center; flex-wrap: wrap; margin-bottom: 15px; }
+        .btn { background: #222; color: #fff; border: 1px solid var(--theme-color); padding: 8px 12px; cursor: pointer; border-radius: 3px; font-size: 12px; text-transform: uppercase; }
+        .btn:hover { background: var(--theme-color); }
 
-    @media (max-width: 600px) {
-      .container { padding: 20px 14px; }
-      .menu-item { flex-wrap: wrap; gap: 10px; }
-      .menu-item .btn { width: 100%; text-align: center; }
-      h1 { font-size: 1.4rem; }
-    }
-  </style>
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; }
+        .panel { background: #222; padding: 10px; border-radius: 5px; }
+        .panel h4 { color: var(--theme-color); text-align: center; margin-bottom: 10px; font-size: 13px; }
+
+        .profile-section { display: flex; gap: 15px; margin-bottom: 15px; flex-wrap: wrap; }
+        .profile-input { flex: 1; min-width: 200px; background: #333; border: 1px solid #444; color: #fff; padding: 8px; border-radius: 3px; }
+        .text-input { width: 100%; background: #333; border: 1px solid #444; color: #fff; padding: 8px; margin-bottom: 10px; border-radius: 3px; }
+        .textarea { width: 100%; background: #333; border: 1px solid #444; color: #fff; padding: 8px; border-radius: 3px; resize: vertical; font-family: inherit; }
+
+        .row { display: flex; align-items: center; margin-bottom: 5px; }
+        .row label { width: 110px; font-size: 12px; color: #aaa; flex-shrink: 0; }
+        .dots { display: flex; gap: 3px; flex-wrap: wrap; }
+        .dot { width: 14px; height: 14px; border-radius: 50%; background: #333; border: 1px solid #555; cursor: pointer; }
+        .dot.square { border-radius: 2px; }
+        .dot.active { background: var(--theme-color); border-color: var(--theme-color); }
+
+        .health-row { display: flex; align-items: center; margin-bottom: 5px; }
+        .health-row label { width: 110px; font-size: 12px; color: #aaa; }
+        .health-box { width: 30px; height: 25px; background: #333; border: 1px solid #555; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: bold; color: #666; user-select: none; }
+        .health-box.s1 { color: var(--theme-color); }
+        .health-box.s2 { color: var(--theme-color-hover); }
+        .health-box.s3 { color: #990000; }
+
+        .ability-block { margin-bottom: 10px; background: #2a2a2a; padding: 10px; border-radius: 5px; }
+        #notes { min-height: 100px; }
+        #ability-desc { min-height: 60px; }
+
+        .stand-container { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; justify-content: center; margin-bottom: 15px; }
+        .canvas-wrapper { position: relative; width: 300px; height: 300px; background: #fff; border-radius: 50%; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
+        canvas { cursor: pointer; }
+        .stand-controls { flex: 1; min-width: 250px; display: flex; flex-direction: column; gap: 5px; }
+        .stat-control { display: flex; justify-content: space-between; background: #222; padding: 8px; border-radius: 3px; cursor: pointer; user-select: none; border: 1px solid #333; }
+        .stat-control:hover { border-color: var(--theme-color); }
+
+        .color-picker-panel {
+            margin-top: 20px; padding: 15px; background: #222; border-radius: 5px;
+            border: 1px dashed var(--theme-color); display: flex; align-items: center; justify-content: center; gap: 15px; flex-wrap: wrap;
+        }
+        .color-picker-panel label { font-size: 14px; color: #fff; font-weight: bold; }
+        input[type="color"] {
+            width: 50px; height: 40px; padding: 0; border: none; border-radius: 4px; cursor: pointer; background: none;
+        }
+        input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+        input[type="color"]::-webkit-color-swatch { border: 2px solid #555; border-radius: 4px; }
+    </style>
 </head>
 <body>
-<div class="container">
-  <h1>Warhammer 40k<br>Custom List</h1>
-  <div class="subtitle">УПРАВЛЕНИЕ ПЕРСОНАЖАМИ</div>
+    <div class="container">
+        <h1>Bizarre Adventure</h1>
 
-  <div class="menu">
-    <!-- Лист персонажа -->
-    <div class="menu-item">
-      <div class="icon">📜</div>
-      <div class="info">
-        <h2>Лист персонажа</h2>
-        <p>Открыть редактор</p>
-      </div>
-      <a href="list.html" class="btn btn-list" target="_blank">Открыть</a>
+        <div class="profile-section">
+            <input type="text" id="char-name" class="profile-input" placeholder="Имя персонажа...">
+            <input type="text" id="player-name" class="profile-input" placeholder="Имя игрока...">
+        </div>
+
+        <div class="controls">
+            <button class="btn" onclick="saveGame()">💾 Сохранить</button>
+            <button class="btn" onclick="loadGame()">📂 Загрузить</button>
+            <button class="btn" onclick="resetGame()">🆕 Новый</button>
+            <button class="btn" onclick="exportFile()">📄 Экспорт</button>
+            <button class="btn" onclick="importFile()">📥 Импорт</button>
+        </div>
+
+        <h3>Атрибуты и Навыки</h3>
+        <div class="grid-3" id="stats-container"></div>
+
+        <h3>Стенд</h3>
+        <div class="ability-block">
+            <input type="text" id="ability-name" class="text-input" placeholder="Название Стенда...">
+            
+            <div class="stand-container">
+                <div class="canvas-wrapper">
+                    <canvas id="standCanvas" width="300" height="300"></canvas>
+                </div>
+                
+                <div class="stand-controls" id="stand-controls"></div>
+            </div>
+
+            <textarea id="ability-desc" class="textarea" placeholder="Описание способности Стенда..."></textarea>
+        </div>
+
+        <div class="grid-3">
+            <div class="panel">
+                <h4>Воля</h4>
+                <div class="row"><label>Временная:</label><div class="dots" id="will-temp"></div></div>
+                <div class="row"><label>Постоянная:</label><div class="dots" id="will-perm"></div></div>
+            </div>
+            <div class="panel">
+                <h4>Здоровье</h4>
+                <div id="health-container"></div>
+            </div>
+        </div>
+
+        <h3>Заметки</h3>
+        <textarea id="notes" class="textarea" placeholder="Заметки по игре..."></textarea>
+
+        <div class="color-picker-panel">
+            <label>🎨 Цвет оформления:</label>
+            <input type="color" id="themeColor" value="#ff6600" title="Выберите цвет заголовков и каймы">
+        </div>
     </div>
 
-    <!-- Справочник -->
-    <div class="menu-item">
-      <div class="icon">📖</div>
-      <div class="info">
-        <h2>Справочник</h2>
-        <p>Открыть в Google Docs</p>
-      </div>
-      <a href="https://docs.google.com/document/d/1xRR8QmgXgFQgIsRDIdOYfboWbyFtWF3tDXE1YaOi5_A/edit?usp=drive_link" class="btn btn-pdf" target="_blank">Открыть</a>
-    </div>
-  </div>
+    <script>
+        const statsConfig = {
+            physical: ['Сила', 'Ловкость', 'Выносливость'],
+            social: ['Обаяние', 'Манипуляция', 'Привлекательность'],
+            mental: ['Восприятие', 'Интеллект', 'Смекалка'],
+            talents: ['Атлетика', 'Бдительность', 'Драка', 'Запугивание', 'Красноречие', 'Лидерство', 'Уличное чутьё', 'Хитрость', 'Шестое чувство', 'Эмпатия'],
+            skills: ['Вождение', 'Воровство', 'Выживание', 'Исполнение', 'Обр. с животными', 'Ремесло', 'Скрытность', 'Стрельба', 'Фехтование', 'Этикет'],
+            knowledges: ['Гум. науки', 'Ест. науки', 'Законы', 'Информатика', 'Медицина', 'Оккультизм', 'Политика', 'Расследование', 'Финансы', 'Электроника']
+        };
 
-  <div class="footer" id="footerPhrase">⚡ ИМПЕРАТОР ЗАЩИЩАЕТ ⚡</div>
-</div>
+        const healthStates = [' ', '/', 'X', 'Ж'];
+        const healthNames = ['Синяки', 'Легко ранен -1', 'Ранен -1', 'Тяжело ранен -2', 'Травмирован -2', 'Покалечен -5', 'Обездвижен'];
+        const standStatsConfig = [
+            { name: 'POWER', ru: 'Сила', angle: -90 }, { name: 'SPEED', ru: 'Скорость', angle: -30 },
+            { name: 'RANGE', ru: 'Дальность', angle: 30 }, { name: 'DURABILITY', ru: 'Прочность', angle: 90 },
+            { name: 'PRECISION', ru: 'Точность', angle: 150 }, { name: 'POTENTIAL', ru: 'Потенциал', angle: 210 }
+        ];
+        const standGrades = ['E', 'D', 'C', 'B', 'A'];
 
-<script>
-  (function() {
-    // ===== ФРАЗЫ ПО ФРАКЦИЯМ =====
-    const factionPhrases = [
-      // Астартес
-      "Мы — его гнев, мы — его карающий меч.",
-      "Ничто не остановит боевого брата, кроме самой смерти.",
-      "Клятва дана, цель ясна — враг будет повержен.",
-      "Боевой дух и чистота оружия — вот наше знамя.",
-      "За Императора! За человечество!",
-      "Сталь и пламя — наша истинная суть.",
-      
-      // Гвардия Императора
-      "Миллионы жизней — цена одного шага к победе.",
-      "Мы — щит, мы — стена, мы не отступим.",
-      "Даже смерть — не повод бросить пост.",
-      "Наша кровь питает земли Империума.",
-      "Приказ есть приказ. Мы исполним.",
-      "Каждый павший — воин, каждый живой — герой.",
-      
-      // Сёстры Битвы
-      "Пламя веры сжигает ересь.",
-      "Божественный свет озаряет наш путь.",
-      "Мы — голос Императора в огне.",
-      "Чистота души — наше оружие.",
-      "Святая ярость не знает пощады.",
-      "Вера движет нами, ненависть ведёт.",
-      
-      // Силы Хаоса
-      "Тьма призывает, мы отвечаем.",
-      "Порча — это сила, сила — это свобода.",
-      "Мы — разрушение, пришедшее по воле богов.",
-      "Империум падёт, хаос воцарится.",
-      "Кровь для Бога Крови!",
-      "Реальность трещит по швам, мы идём.",
-      
-      // Эльдары
-      "На пути древних — лишь мудрость и смерть.",
-      "Мы были здесь до того, как вы научились дышать.",
-      "Наша цивилизация — вечная, как звёзды.",
-      "Каждое наше слово — нить судьбы.",
-      "Вы не поймёте, мы не объясним.",
-      "Пути резных танцуют между миров.",
-      
-      // Тау
-      "Ради Великого Блага — вперёд!",
-      "Мы — свет в тёмном будущем.",
-      "Технологии и разум — наше оружие.",
-      "Каждая смерть — шаг к гармонии.",
-      "Мы строим, а не разрушаем.",
-      "Дипломатия или плазма — выбор за вами.",
-      
-      // Тёмные Эльдары
-      "Боль — это искусство, страдание — это вдохновение.",
-      "Мы — тень, вы — лишь свет, который мы погасим.",
-      "В коморре погребены ваши надежды.",
-      "Каждое мгновение — охота, каждая душа — добыча.",
-      "Мы не бежим от боли — мы ею живём.",
-      "Вы — игрушки, мы — игроки."
-    ];
+        let state = {
+            charName: '', playerName: '', stats: {}, willTemp: 0, willPerm: 0, health: Array(7).fill(0),
+            abilityName: '', abilityDesc: '', notes: '',
+            standStats: { POWER: 0, SPEED: 0, RANGE: 0, DURABILITY: 0, PRECISION: 0, POTENTIAL: 0 },
+            themeColor: '#ff6600'
+        };
 
-    // ===== ВЫБОР СЛУЧАЙНОЙ ФРАЗЫ =====
-    function getRandomPhrase() {
-      const randomIndex = Math.floor(Math.random() * factionPhrases.length);
-      return factionPhrases[randomIndex];
-    }
+        function applyThemeColor(color) {
+            document.documentElement.style.setProperty('--theme-color', color);
+            let hex = color.replace('#', '');
+            let r = Math.max(0, parseInt(hex.substring(0, 2), 16) - 50);
+            let g = Math.max(0, parseInt(hex.substring(2, 4), 16) - 50);
+            let b = Math.max(0, parseInt(hex.substring(4, 6), 16) - 50);
+            let hoverColor = `#${r.toString(16).padStart(2,'0')}${g.toString(16).padStart(2,'0')}${b.toString(16).padStart(2,'0')}`;
+            document.documentElement.style.setProperty('--theme-color-hover', hoverColor);
+            document.getElementById('themeColor').value = color;
+        }
 
-    // ===== УСТАНОВКА ФРАЗЫ =====
-    function setFooterPhrase() {
-      const footer = document.getElementById('footerPhrase');
-      if (footer) {
-        const phrase = getRandomPhrase();
-        footer.textContent = `⚔ ${phrase} ⚔`;
-      }
-    }
+        document.getElementById('themeColor').addEventListener('input', (e) => {
+            state.themeColor = e.target.value;
+            applyThemeColor(state.themeColor);
+        });
 
-    // ===== ЗАПУСК =====
-    document.addEventListener('DOMContentLoaded', setFooterPhrase);
-  })();
-</script>
+        function init() {
+            const statsContainer = document.getElementById('stats-container');
+            const columns = [
+                { title: 'ФИЗИЧЕСКИЕ', key: 'physical' }, { title: 'СОЦИАЛЬНЫЕ', key: 'social' }, { title: 'МЕНТАЛЬНЫЕ', key: 'mental' },
+                { title: 'ТАЛАНТЫ', key: 'talents' }, { title: 'НАВЫКИ', key: 'skills' }, { title: 'ЗНАНИЯ', key: 'knowledges' }
+            ];
+
+            statsContainer.innerHTML = '';
+            columns.forEach(col => {
+                const panel = document.createElement('div');
+                panel.className = 'panel';
+                panel.innerHTML = `<h4>${col.title}</h4>`;
+                statsConfig[col.key].forEach(statName => {
+                    if (state.stats[statName] === undefined) state.stats[statName] = 0;
+                    const row = document.createElement('div'); row.className = 'row';
+                    row.innerHTML = `<label>${statName}:</label>`;
+                    const dotsContainer = document.createElement('div'); dotsContainer.className = 'dots';
+                    for (let i = 0; i < 5; i++) {
+                        const dot = document.createElement('div');
+                        dot.className = 'dot' + (state.stats[statName] > i ? ' active' : '');
+                        dot.onclick = () => { state.stats[statName] = state.stats[statName] === i + 1 ? i : i + 1; renderDots(dotsContainer, state.stats[statName], 5); };
+                        dotsContainer.appendChild(dot);
+                    }
+                    row.appendChild(dotsContainer); panel.appendChild(row);
+                });
+                statsContainer.appendChild(panel);
+            });
+
+            createDots('will-temp', 10, false, (val) => { state.willTemp = val; });
+            createDots('will-perm', 10, true, (val) => { state.willPerm = val; });
+
+            const healthContainer = document.getElementById('health-container');
+            healthContainer.innerHTML = '';
+            healthNames.forEach((name, i) => {
+                const row = document.createElement('div'); row.className = 'health-row'; row.innerHTML = `<label>${name}</label>`;
+                const box = document.createElement('div'); box.className = 'health-box';
+                updateHealthBox(box, state.health[i]);
+                box.onclick = () => { state.health[i] = Math.min(3, state.health[i] + 1); updateHealthBox(box, state.health[i]); };
+                box.oncontextmenu = (e) => { e.preventDefault(); state.health[i] = Math.max(0, state.health[i] - 1); updateHealthBox(box, state.health[i]); };
+                row.appendChild(box); healthContainer.appendChild(row);
+            });
+
+            const controlsContainer = document.getElementById('stand-controls');
+            controlsContainer.innerHTML = '';
+            standStatsConfig.forEach(stat => {
+                const div = document.createElement('div'); div.className = 'stat-control';
+                div.innerHTML = `<span>${stat.ru} (${stat.name})</span> <strong id="lbl-${stat.name}">${standGrades[state.standStats[stat.name]]}</strong>`;
+                div.onclick = () => { state.standStats[stat.name] = (state.standStats[stat.name] + 1) % 5; updateStandUI(); };
+                div.oncontextmenu = (e) => { e.preventDefault(); state.standStats[stat.name] = (state.standStats[stat.name] - 1 + 5) % 5; updateStandUI(); };
+                controlsContainer.appendChild(div);
+            });
+
+            document.getElementById('ability-name').oninput = (e) => state.abilityName = e.target.value;
+            document.getElementById('ability-desc').oninput = (e) => state.abilityDesc = e.target.value;
+            document.getElementById('notes').oninput = (e) => state.notes = e.target.value;
+            document.getElementById('char-name').oninput = (e) => state.charName = e.target.value;
+            document.getElementById('player-name').oninput = (e) => state.playerName = e.target.value;
+
+            applyThemeColor(state.themeColor);
+            updateStandUI();
+        }
+
+        function createDots(containerId, max, isSquare, onChange) {
+            const container = document.getElementById(containerId); container.innerHTML = '';
+            const currentVal = containerId === 'will-temp' ? state.willTemp : state.willPerm;
+            for (let i = 0; i < max; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'dot' + (isSquare ? ' square' : '') + (currentVal > i ? ' active' : '');
+                dot.onclick = () => {
+                    const newVal = currentVal === i + 1 ? i : i + 1;
+                    onChange(newVal); renderDots(container, newVal, max);
+                };
+                container.appendChild(dot);
+            }
+        }
+
+        function renderDots(container, val, max) {
+            container.querySelectorAll('.dot').forEach((d, i) => {
+                if (i < val) d.classList.add('active'); else d.classList.remove('active');
+            });
+        }
+
+        function updateHealthBox(box, val) {
+            box.textContent = healthStates[val];
+            box.className = 'health-box' + (val === 1 ? ' s1' : val === 2 ? ' s2' : val === 3 ? ' s3' : '');
+        }
+
+        function updateStandUI() {
+            standStatsConfig.forEach(stat => {
+                document.getElementById(`lbl-${stat.name}`).textContent = standGrades[state.standStats[stat.name]];
+            });
+
+            const canvas = document.getElementById('standCanvas');
+            const ctx = canvas.getContext('2d');
+            const cx = 150, cy = 150, r = 100;
+            ctx.clearRect(0, 0, 300, 300);
+
+            ctx.beginPath(); ctx.arc(cx, cy, r + 30, 0, 2 * Math.PI); ctx.strokeStyle = '#000'; ctx.lineWidth = 2; ctx.stroke();
+            ctx.beginPath(); ctx.arc(cx, cy, r, 0, 2 * Math.PI); ctx.strokeStyle = '#000'; ctx.lineWidth = 1; ctx.stroke();
+
+            standStatsConfig.forEach(stat => {
+                const rad = stat.angle * Math.PI / 180;
+                ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + Math.cos(rad) * r, cy + Math.sin(rad) * r);
+                ctx.strokeStyle = '#000'; ctx.lineWidth = 1; ctx.stroke();
+            });
+
+            // ИСПРАВЛЕНО: Теперь A на краю, E в центре
+            ctx.fillStyle = '#000'; ctx.font = 'bold 12px Arial'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+            for (let i = 0; i < 5; i++) {
+                const valRadius = r * ((i + 1) / 5);
+                ctx.fillText(standGrades[i], cx, cy - valRadius); 
+            }
+
+            ctx.beginPath();
+            let firstPoint = true;
+            standStatsConfig.forEach(stat => {
+                const val = state.standStats[stat.name];
+                const pointRadius = val === 0 ? 10 : r * (val / 4);
+                const rad = stat.angle * Math.PI / 180;
+                const x = cx + Math.cos(rad) * pointRadius;
+                const y = cy + Math.sin(rad) * pointRadius;
+                if (firstPoint) { ctx.moveTo(x, y); firstPoint = false; } else { ctx.lineTo(x, y); }
+            });
+            ctx.closePath(); ctx.fillStyle = 'rgba(150, 190, 255, 0.6)'; ctx.fill(); ctx.strokeStyle = '#6a9fff'; ctx.lineWidth = 2; ctx.stroke();
+
+            standStatsConfig.forEach(stat => {
+                const val = state.standStats[stat.name];
+                const pointRadius = val === 0 ? 10 : r * (val / 4);
+                const rad = stat.angle * Math.PI / 180;
+                const x = cx + Math.cos(rad) * pointRadius;
+                const y = cy + Math.sin(rad) * pointRadius;
+                ctx.beginPath(); ctx.arc(x, y, 4, 0, 2 * Math.PI); ctx.fillStyle = '#000'; ctx.fill();
+            });
+        }
+
+        function collectData() {
+            return {
+                charName: document.getElementById('char-name').value,
+                playerName: document.getElementById('player-name').value,
+                stats: state.stats, willTemp: state.willTemp, willPerm: state.willPerm, health: state.health,
+                abilityName: document.getElementById('ability-name').value, abilityDesc: document.getElementById('ability-desc').value,
+                notes: document.getElementById('notes').value, standStats: state.standStats, themeColor: state.themeColor
+            };
+        }
+
+        function restoreData(data) {
+            state.stats = data.stats || {};
+            state.willTemp = data.willTemp || 0;
+            state.willPerm = data.willPerm || 0;
+            state.health = data.health || Array(7).fill(0);
+            state.standStats = data.standStats || { POWER: 0, SPEED: 0, RANGE: 0, DURABILITY: 0, PRECISION: 0, POTENTIAL: 0 };
+            state.themeColor = data.themeColor || '#ff6600';
+            
+            init();
+
+            document.getElementById('char-name').value = data.charName || '';
+            document.getElementById('player-name').value = data.playerName || '';
+            document.getElementById('ability-name').value = data.abilityName || '';
+            document.getElementById('ability-desc').value = data.abilityDesc || '';
+            document.getElementById('notes').value = data.notes || '';
+            
+            state.charName = data.charName || '';
+            state.playerName = data.playerName || '';
+        }
+
+        function saveGame() { localStorage.setItem('bizarreSave', JSON.stringify(collectData())); alert('Сохранено!'); }
+        function loadGame() { const save = localStorage.getItem('bizarreSave'); if (save) { restoreData(JSON.parse(save)); alert('Загружено!'); } else alert('Сохранений нет.'); }
+        function resetGame() { if (confirm('Очистить лист?')) { localStorage.removeItem('bizarreSave'); location.reload(); } }
+        
+        function exportFile() {
+            const blob = new Blob([JSON.stringify(collectData(), null, 2)], { type: 'application/json' });
+            const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'bizarre_character.json'; a.click();
+        }
+
+        function importFile() {
+            const input = document.createElement('input'); input.type = 'file'; input.accept = '.json';
+            input.onchange = e => {
+                const reader = new FileReader();
+                reader.onload = ev => { try { restoreData(JSON.parse(ev.target.result)); } catch { alert('Ошибка файла'); } };
+                reader.readAsText(e.target.files[0]);
+            };
+            input.click();
+        }
+
+        init();
+    </script>
 </body>
 </html>
